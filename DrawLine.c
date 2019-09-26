@@ -350,8 +350,38 @@ void drawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint32_t color)
 
   }
 
+  lcddelay(2);
+
  }
 
+}
+
+const int M = 4;
+const int N = 2;
+
+void drawRec(int32_t pt[M][N], uint32_t color)
+{
+  int i;
+  for(i = 0; i < 4; i++)
+  {
+    drawLine(pt[i][0], pt[i][1], pt[(i+1)%4][0],pt[(i+1)%4][1],color);
+  }
+}
+
+float* p2v(int32_t pt[N])
+{
+  float p[N];
+  p[0]= (pt[0] - _width/2)*2/_width;
+  p[1] =(- pt[1] + _height/2)*2/_height;
+  return p;
+}
+
+int32_t* v2p(float pt[N])
+{
+  int32_t p[N];
+  p[0]= pt[0] * _width/2 + _width/2;
+  p[1] = - pt[1] * _height/2 + _height/2;
+  return p;
 }
 
 
@@ -381,16 +411,16 @@ int main (void)
 
 	 fillrect(0, 0, ST7735_TFTWIDTH, ST7735_TFTHEIGHT, WHITE);
 
-	 int x0,x1,y0,y1;
+	 drawLine(0,_height/2,_width,_height/2,PURPLE);
+	 drawLine(_width/2,0,_width/2,_height,PURPLE);
 
-	 x0 = 20;
-	 x1 = 80;
-	 y0 = 60;
-	 y1 = 140;
+   int32_t pt[4][2] = {{_width/4,_height/4},{3*_width/4,_height/4},{3*_width/4,3*_height/4},{_width/4,3*_height/4}};
+   float p[4][2] = {{-0.3,-0.3},{0.3,-0.3},{0.3,0.3},{-0.3,0.3}};
 
-	 drawLine(x0,y0,x1,y1,PURPLE);
+   drawRec(v2p(pt), BLUE);
+   drawRec(p2v(p), RED);
 
-	  return 0;
+	 return 0;
 
 }
 
