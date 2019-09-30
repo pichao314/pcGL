@@ -60,6 +60,13 @@ uint8_t dest_addr[SSP_BUFSIZE];
 int _height = ST7735_TFTHEIGHT;
 int _width = ST7735_TFTWIDTH;
 
+typedef struct Point
+{
+  float x;
+  float y;
+}Pt;
+
+
 
 void spiwrite(uint8_t c)
 
@@ -279,12 +286,26 @@ void drawPixel(int16_t x, int16_t y, uint32_t color)
 
 **
 
+
 *****************************************************************************/
-
-
-void drawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint32_t color)
-
+Pt v2p(Pt p)
 {
+  Pt n = {(p.x + 1 ) * _width/2,(1 - p.y) * _height/2};
+  return n;
+}
+
+void drawLine(Pt st, Pt ed, float color)
+{
+  Pt start, end;
+  start = v2p(st);
+  end = v2p(ed);
+
+ int16_t x0,y0,x1,y1;
+ 
+ x0 = start.x;
+ y0 = start.y;
+ x1 = end.x;
+ y1 = end.y;
 
  int16_t slope = abs(y1 - y0) > abs(x1 - x0);
 
@@ -350,48 +371,100 @@ void drawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint32_t color)
 
   }
 
-  lcddelay(2);
+  lcddelay(1);
 
  }
 
 }
 
-const int M = 4;
-const int N = 2;
 
-void drawRec(int32_t pt[M][N], uint32_t color)
+void drawRec(Pt* req, uint32_t color)
 {
-  int i;
-  for(i = 0; i < 4; i++)
+  for(int i = 0; i < 4; i++)
   {
-    drawLine(pt[i][0], pt[i][1], pt[(i+1)%4][0],pt[(i+1)%4][1],color);
+    drawLine(req[i], req[(i+1)%4],color);
   }
 }
 
-float* p2v(int32_t pt[N])
-{
-  float p[N];
-  p[0]= (pt[0] - _width/2)*2/_width;
-  p[1] =(- pt[1] + _height/2)*2/_height;
-  return p;
+Pt* nextRec(Pt* req, float rate, uint32_t color){
+  Pt* next = malloc(sizeof(Pt)*4);
+
+  for (int i = 0; i < 4; i++){
+    next[i].x = req[i].x + rate * (req[(i+1)%4].x - req[i].x);
+    next[i].y = req[i].y + rate * (req[(i+1)%4].y - req[i].y);
+  }
+  return next;
 }
 
-int32_t* v2p(float pt[N])
-{
-  int32_t p[N];
-  p[0]= pt[0] * _width/2 + _width/2;
-  p[1] = - pt[1] * _height/2 + _height/2;
-  return p;
+
+void recreq(Pt* req, int level, float rate, uint32_t color){
+
+  rate = 1- rate;
+
+  Pt* seq = malloc(sizeof(Pt)*4);
+  seq = req;
+
+   for (int j = 0; j < level; j++){
+     drawRec(seq, color);
+     seq = nextRec(seq,rate,color);
+   }
 }
 
+
+
+
+Pt rot(Pt p, Pt o, float angle){
+
+	// Convert to radians
+	angle = angle * (3.14285/180);
+	float s = sin(angle);
+	float c = cos(angle);
+
+	//translate point to origin
+	Pt t = {p.x - o.x,p.y - o.y};
+
+	Pt rt ={ t.x * c - t.y * s, t.x * s + t.y * c};
+
+	//translate point back
+	Pt new ={ rt.x + o.x,rt.y + o.y};
+
+	return new;
+}
+
+
+void drawTree(Pt start, Pt end, float rate, int angle,int level, uint32_t color){
+
+  if (level ==0) return;
+
+	Pt c = {end.x + rate * (end.x - start.x), end.y + rate * (end.y - start.y)};
+
+	drawLine(c, end, GREEN);
+  Pt rtl, rtr;
+
+	rtl = rot(c, end, angle);
+	drawLine(rtl, end, GREEN);
+
+	rtr = rot(c, end, 360 - angle);
+	drawLine(rtr, end, GREEN);
+
+  drawTree(end, c, rate,angle, level - 1, color);
+  drawTree(end, rtl, rate, angle, level - 1, color);
+  drawTree(end, rtr, rate, angle, level - 1, color);
+}
 
 /*
+void recTree(Pt* req, int level, float rate, uint32_t color){
+  drawLine(req[0],req[1],GREEN);
+  for (int j = 0; j < level; j++){
+    Pt* tmp = malloc(sizeof(Pt)*2*3*(j+1));
+    for (int i = 0; i <3; i++){
 
- Main Function main()
-
+    }
+    drawTree(req[0],req[1],0.8,30,GREEN);
+    free(tmp);
+  }
+}
 */
-
-
 
 int main (void)
 
@@ -411,16 +484,31 @@ int main (void)
 
 	 fillrect(0, 0, ST7735_TFTWIDTH, ST7735_TFTHEIGHT, WHITE);
 
-	 drawLine(0,_height/2,_width,_height/2,PURPLE);
-	 drawLine(_width/2,0,_width/2,_height,PURPLE);
+   Pt xn = {-1,0};
+   Pt xp = {1,0};
+   Pt yn = {0,-1};
+   Pt yp = {0,1};
 
-   int32_t pt[4][2] = {{_width/4,_height/4},{3*_width/4,_height/4},{3*_width/4,3*_height/4},{_width/4,3*_height/4}};
-   float p[4][2] = {{-0.3,-0.3},{0.3,-0.3},{0.3,0.3},{-0.3,0.3}};
 
-   drawRec(v2p(pt), BLUE);
-   drawRec(p2v(p), RED);
+	 drawLine(xn,xp,PURPLE);
+	 drawLine(yn,yp,PURPLE);
+
+/*
+   Pt seq2[4] = {{-0.1,-0.1},{0.3,-0.3},{0.4,0.4},{-0.5,0.5}};
+   int i = 0;
+   drawRec(seq2, BLUE);
+*/
+
+/*
+   Pt se[4] = {{-1,-1},{1,-1},{1,1},{-1,1}};
+
+   recreq(se, 11, 0.8, BLUE);
+*/
+  Pt start = {0,-1};
+  Pt end = {0,-0.5};
+
+  drawTree(start,end,0.5, 30,5, GREEN);
 
 	 return 0;
-
 }
 
