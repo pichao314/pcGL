@@ -201,7 +201,7 @@ void lcddelay(int ms)
 
 {
 
- int count = 24000;
+ int count = 12000;
 
  int i;
 
@@ -452,8 +452,8 @@ void drawTree(Pt start, Pt end, float rate, int angle,int level, uint32_t color)
   drawTree(end, rtr, rate, angle, level - 1, color);
 }
 
-/*
-void recTree(Pt* req, int level, float rate, uint32_t color){
+
+void drawTrees(Pt* req, int level, float rate, uint32_t color){
   drawLine(req[0],req[1],GREEN);
   for (int j = 0; j < level; j++){
     Pt* tmp = malloc(sizeof(Pt)*2*3*(j+1));
@@ -462,9 +462,10 @@ void recTree(Pt* req, int level, float rate, uint32_t color){
     }
     drawTree(req[0],req[1],0.8,30,GREEN);
     free(tmp);
+    
   }
 }
-*/
+
 
 int main (void)
 
@@ -494,8 +495,8 @@ int main (void)
 	 drawLine(yn,yp,PURPLE);
 
 /*
-   Pt seq2[4] = {{-0.1,-0.1},{0.3,-0.3},{0.4,0.4},{-0.5,0.5}};
-   int i = 0;
+   Pt seq2[4] = {{-0.5,-0.5},{0.5,-0.5},{0.5,0.5},{-0.5,0.5}};
+
    drawRec(seq2, BLUE);
 */
 
@@ -504,10 +505,12 @@ int main (void)
 
    recreq(se, 11, 0.8, BLUE);
 */
-  Pt start = {0,-1};
-  Pt end = {0,-0.5};
+  Pt start = {0,-40.0*2.0/_height};
+  Pt end = {0,10.0*2.0/_height};
 
-  drawTree(start,end,0.5, 30,5, GREEN);
+  drawLine(start,end,GREEN);
+
+  drawTree(start,end,0.8, 30,8, GREEN);
 
 	 return 0;
 }
