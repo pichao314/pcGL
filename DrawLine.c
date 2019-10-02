@@ -66,6 +66,15 @@ typedef struct Point
   float y;
 }Pt;
 
+typedef struct Branch
+{
+  Pt mid;
+  Pt left;
+  Pt ext;
+  Pt right;
+}Br;
+
+
 
 
 void spiwrite(uint8_t c)
@@ -412,8 +421,6 @@ void recreq(Pt* req, int level, float rate, uint32_t color){
 }
 
 
-
-
 Pt rot(Pt p, Pt o, float angle){
 
 	angle = angle * (3.14285/180);
@@ -429,6 +436,8 @@ Pt rot(Pt p, Pt o, float angle){
 	return new;
 }
 
+
+/* Pt array version
 Pt* drawBranch(Pt start, Pt end, float rate, int angle, uint32_t color)
 {
   Pt* next = malloc(sizeof(Pt)*4);
@@ -440,8 +449,16 @@ Pt* drawBranch(Pt start, Pt end, float rate, int angle, uint32_t color)
   next[2] = rot(mid, end, angle);
   next[3] = rot(mid, end, 360 - angle);
 
+  printf("++++++++++++++++\nThe rotted value is: ");
+  for (int i = 0; i < 4; i++){
+	  printf("Pt%d: %f, %f\t",i, next[i].x, next[i].y);
+  }
+  printf("\n");
   return(next);
 }
+
+*/
+
 
 void drawTree(Pt* init, float rate, int angle, int level, uint32_t color)
 {
@@ -455,21 +472,26 @@ void drawTree(Pt* init, float rate, int angle, int level, uint32_t color)
     draw each level by l, m, r, each level owns 3^i branches, 
     output # (equals to input for next level) is 4*3^(i-1)
     */
+   printf("Now printing the %d level!\n-------------------\n", i);
    int num = pow(3,i-1);
 
    //malloc the memory for next level
+
    next = malloc(sizeof(Pt*) * num);
-   
+   printf("%d locs of PT* malloc\n", num);
+
    //traverse each branch on current level
    for (int j = 0; j < num; j++){
+     printf("Start to draw %d branch\n", j);
      //draw three branch l,m,r and return the pt for next level
-     for (int k = 1; k < 4; k++){
+     for (int k = 0; k < 4; k++){
        next[j * 4 + k] = drawBranch(cur[j][0], cur[j][k+1],rate, angle, color);
      }
-     //free the current level and refer to the next level
-     free(cur);
-     cur = next;
+
    }
+    //free the current level and refer to the next level
+   free(cur);
+   cur = next;
    
   }
 }
@@ -539,7 +561,7 @@ void screenSaver(){
 
 void drawForest(){
   Pt init[2] = {{0,-1},{0,-0.5}};
-  drawTree(init, 0.5, 30, 2, GREEN);
+  drawTree(init, 0.8, 30, 3, GREEN);
 }
 
 int main (void)
@@ -558,7 +580,7 @@ int main (void)
 
 	 lcd_init();
 
-	 fillrect(0, 0, ST7735_TFTWIDTH, ST7735_TFTHEIGHT, WHITE);
+	 fillrect(0, 0, ST7735_TFTWIDTH, ST7735_TFTHEIGHT, BLACK);
 
   //draw2DCordinate();
   //drawMidSquare();
