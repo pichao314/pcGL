@@ -393,6 +393,7 @@ Pt* nextRec(Pt* req, float rate, uint32_t color){
     next[i].x = req[i].x + rate * (req[(i+1)%4].x - req[i].x);
     next[i].y = req[i].y + rate * (req[(i+1)%4].y - req[i].y);
   }
+  free(req);
   return next;
 }
 
@@ -415,22 +416,70 @@ void recreq(Pt* req, int level, float rate, uint32_t color){
 
 Pt rot(Pt p, Pt o, float angle){
 
-	// Convert to radians
 	angle = angle * (3.14285/180);
 	float s = sin(angle);
 	float c = cos(angle);
 
-	//translate point to origin
-	Pt t = {p.x - o.x,p.y - o.y};
 
+	Pt t = {p.x - o.x,p.y - o.y};
 	Pt rt ={ t.x * c - t.y * s, t.x * s + t.y * c};
 
-	//translate point back
 	Pt new ={ rt.x + o.x,rt.y + o.y};
 
 	return new;
 }
 
+Pt* drawBranch(Pt start, Pt end, float rate, int angle, uint32_t color)
+{
+  Pt* next = malloc(sizeof(Pt)*4);
+  drawLine(start, end, color);
+
+  Pt mid = {end.x + rate * (end.x - start.x), end.y + rate * (end.y - start.y)};
+  next[0] = end;
+  next[1] = mid;
+  next[2] = rot(mid, end, angle);
+  next[3] = rot(mid, end, 360 - angle);
+
+  return(next);
+}
+
+void drawTree(Pt* init, float rate, int angle, int level, uint32_t color)
+{
+  Pt** cur = malloc(sizeof(Pt)*4);
+  cur[0] = drawBranch(init[0], init[1], rate, angle, color);
+  Pt** next;
+
+  for (int i = 2; i <= level; i++){
+    /*
+    draw each level by l, m, r, each level owns 3^i branches, 
+    output # (equals to input for next level) is 4*3^(i-1)
+    */
+   int num = pow(3,i-1);
+
+   //malloc the memory for next level
+   next = malloc(sizeof(Pt) * 4 * num);
+   
+   //traverse each branch on current level
+   for (int j = 0; j < num; j++){
+     //draw three branch l,m,r and return the pt for next level
+     for (int k = 1; k < 4; k++){
+       next[j * 4 + k] = drawBranch(cur[j][0], cur[j][k+1],rate, angle, color);
+     }
+     //free the current level and refer to the next level
+     free(cur);
+     cur = next;
+   }
+   
+  }
+}
+
+
+
+/*
+
+Recursive version
+
+******
 
 void drawTree(Pt start, Pt end, float rate, int angle,int level, uint32_t color){
 
@@ -465,7 +514,7 @@ void drawTrees(Pt* req, int level, float rate, uint32_t color){
     
   }
 }
-
+*/
 
 int main (void)
 
@@ -485,6 +534,9 @@ int main (void)
 
 	 fillrect(0, 0, ST7735_TFTWIDTH, ST7735_TFTHEIGHT, WHITE);
 
+
+/* Draw the cordinate */
+
    Pt xn = {-1,0};
    Pt xp = {1,0};
    Pt yn = {0,-1};
@@ -494,23 +546,23 @@ int main (void)
 	 drawLine(xn,xp,PURPLE);
 	 drawLine(yn,yp,PURPLE);
 
-/*
+/* Draw the middle square
+
    Pt seq2[4] = {{-0.5,-0.5},{0.5,-0.5},{0.5,0.5},{-0.5,0.5}};
 
    drawRec(seq2, BLUE);
 */
 
-/*
+/* Draw the shrink-square screen saver
    Pt se[4] = {{-1,-1},{1,-1},{1,1},{-1,1}};
 
    recreq(se, 11, 0.8, BLUE);
 */
-  Pt start = {0,-40.0*2.0/_height};
-  Pt end = {0,10.0*2.0/_height};
 
-  drawLine(start,end,GREEN);
 
-  drawTree(start,end,0.8, 30,8, GREEN);
+  Pt init[2] = {{0,-1},{0,-0.5}};
+
+  drawTree(init, 0.5, 30, 5, GREEN);
 
 	 return 0;
 }
