@@ -445,7 +445,8 @@ Pt* drawBranch(Pt start, Pt end, float rate, int angle, uint32_t color)
 
 void drawTree(Pt* init, float rate, int angle, int level, uint32_t color)
 {
-  Pt** cur = malloc(sizeof(Pt)*4);
+  Pt** cur = malloc(sizeof(Pt*));
+  //cur[0] = malloc(sizeof(Pt)*4);
   cur[0] = drawBranch(init[0], init[1], rate, angle, color);
   Pt** next;
 
@@ -457,7 +458,7 @@ void drawTree(Pt* init, float rate, int angle, int level, uint32_t color)
    int num = pow(3,i-1);
 
    //malloc the memory for next level
-   next = malloc(sizeof(Pt) * 4 * num);
+   next = malloc(sizeof(Pt*) * num);
    
    //traverse each branch on current level
    for (int j = 0; j < num; j++){
@@ -516,6 +517,31 @@ void drawTrees(Pt* req, int level, float rate, uint32_t color){
 }
 */
 
+void draw2DCordinate(){
+   Pt xn = {-1,0};
+   Pt xp = {1,0};
+   Pt yn = {0,-1};
+   Pt yp = {0,1};
+
+	 drawLine(xn,xp,PURPLE);
+	 drawLine(yn,yp,PURPLE);
+}
+
+void drawMidSquare(){
+  Pt seq2[4] = {{-0.5,-0.5},{0.5,-0.5},{0.5,0.5},{-0.5,0.5}};
+  drawRec(seq2, BLUE);
+}
+
+void screenSaver(){
+  Pt se[4] = {{-1,-1},{1,-1},{1,1},{-1,1}};
+  recreq(se, 11, 0.8, BLUE);
+}
+
+void drawForest(){
+  Pt init[2] = {{0,-1},{0,-0.5}};
+  drawTree(init, 0.5, 30, 2, GREEN);
+}
+
 int main (void)
 
 {
@@ -534,35 +560,10 @@ int main (void)
 
 	 fillrect(0, 0, ST7735_TFTWIDTH, ST7735_TFTHEIGHT, WHITE);
 
-
-/* Draw the cordinate */
-
-   Pt xn = {-1,0};
-   Pt xp = {1,0};
-   Pt yn = {0,-1};
-   Pt yp = {0,1};
-
-
-	 drawLine(xn,xp,PURPLE);
-	 drawLine(yn,yp,PURPLE);
-
-/* Draw the middle square
-
-   Pt seq2[4] = {{-0.5,-0.5},{0.5,-0.5},{0.5,0.5},{-0.5,0.5}};
-
-   drawRec(seq2, BLUE);
-*/
-
-/* Draw the shrink-square screen saver
-   Pt se[4] = {{-1,-1},{1,-1},{1,1},{-1,1}};
-
-   recreq(se, 11, 0.8, BLUE);
-*/
-
-
-  Pt init[2] = {{0,-1},{0,-0.5}};
-
-  drawTree(init, 0.5, 30, 5, GREEN);
+  //draw2DCordinate();
+  //drawMidSquare();
+  //screenSaver();
+  drawForest();
 
 	 return 0;
 }
