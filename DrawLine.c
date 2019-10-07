@@ -1,7 +1,7 @@
 /*
 ===============================================================================
  Name        : DrawLine.c
- Author      : $RJ
+ Author      : $PC
  Version     :
  Copyright   : $(copyright)
  Description : main definition
@@ -23,7 +23,7 @@
 
 some of the location may not exist in that port. */
 
-#define PORT_NUM            0
+#define PORT_NUM            1
 
 
 uint8_t src_addr[SSP_BUFSIZE];
@@ -66,15 +66,12 @@ typedef struct Point
   float y;
 }Pt;
 
-typedef struct Branch
+typedef struct Point_3D
 {
-  Pt mid;
-  Pt left;
-  Pt ext;
-  Pt right;
-}Br;
-
-
+  float x;
+  float y;
+  float z; 
+}P3t;
 
 
 void spiwrite(uint8_t c)
@@ -556,7 +553,7 @@ void drawMidSquare(){
 
 void screenSaver(){
   Pt se[4] = {{-1,-1},{1,-1},{1,1},{-1,1}};
-  recreq(se, 11, 0.8, BLUE);
+  recreq(se, 11, 0.8, GREEN);
 }
 
 void drawForest(){
@@ -584,7 +581,7 @@ int main (void)
 
   //draw2DCordinate();
   //drawMidSquare();
-  screenSaver();
+  //screenSaver();
   //drawForest();
 
 	 return 0;
