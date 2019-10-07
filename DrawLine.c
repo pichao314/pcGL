@@ -584,8 +584,8 @@ int main (void)
 
   //draw2DCordinate();
   //drawMidSquare();
-  //screenSaver();
-  drawForest();
+  screenSaver();
+  //drawForest();
 
 	 return 0;
 }
