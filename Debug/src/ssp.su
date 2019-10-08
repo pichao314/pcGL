@@ -1,0 +1,9 @@
+core_cm3.h:1323:22:void NVIC_EnableIRQ(IRQn_Type)	16	static
+ssp.cpp:46:6:void SSP0_IRQHandler()	16	static
+ssp.cpp:87:6:void SSP1_IRQHandler()	16	static
+ssp.cpp:123:6:void SSP_SSELToggle(uint32_t, uint32_t)	16	static
+ssp.cpp:151:6:void SSP0Init()	16	static
+ssp.cpp:219:6:void SSP1Init()	16	static
+ssp.cpp:286:6:void SSPSend(uint32_t, uint8_t*, uint32_t)	32	static
+ssp.cpp:339:9:uint8_t SSP1SendReceive(uint8_t)	16	static
+ssp.cpp:353:6:void SSPReceive(uint32_t, uint8_t*, uint32_t)	32	static

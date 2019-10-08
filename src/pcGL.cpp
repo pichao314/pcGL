@@ -1,32 +1,30 @@
 /*
 ===============================================================================
- Name        : main.c
- Author      : $(author)
+ Name        : pcGL.cpp
+ Author      : $pichao314
  Version     :
  Copyright   : $(copyright)
  Description : main definition
 ===============================================================================
 */
 
-#ifdef __USE_CMSIS
-#include "LPC17xx.h"
-#endif
-
 #include <cr_section_macros.h>
-
-// TODO: insert other include files here
+#include <NXP/crp.h>
+#include "LPC17xx.h"  
+#include "ssp.h"
+#include <cstdlib>
+#include <iostream>
+#include <string>
+#include <cmath>
+#include "test.h"
 
 // TODO: insert other definitions and declarations here
 
+using namespace std;
+
 int main(void) {
 
-    // TODO: insert code here
+    msg();
 
-    // Force the counter to be placed into memory
-    volatile static int i = 0 ;
-    // Enter an infinite loop, just incrementing a counter
-    while(1) {
-        i++ ;
-    }
     return 0 ;
 }

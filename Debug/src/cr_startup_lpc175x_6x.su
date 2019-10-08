@@ -1,0 +1,13 @@
+cr_startup_lpc175x_6x.cpp:233:6:void data_init(unsigned int, unsigned int, unsigned int)	40	static
+cr_startup_lpc175x_6x.cpp:242:6:void bss_init(unsigned int, unsigned int)	24	static
+cr_startup_lpc175x_6x.cpp:268:1:void ResetISR()	24	static
+cr_startup_lpc175x_6x.cpp:325:6:void NMI_Handler()	4	static
+cr_startup_lpc175x_6x.cpp:330:6:void HardFault_Handler()	4	static
+cr_startup_lpc175x_6x.cpp:335:6:void MemManage_Handler()	4	static
+cr_startup_lpc175x_6x.cpp:340:6:void BusFault_Handler()	4	static
+cr_startup_lpc175x_6x.cpp:345:6:void UsageFault_Handler()	4	static
+cr_startup_lpc175x_6x.cpp:350:6:void SVC_Handler()	4	static
+cr_startup_lpc175x_6x.cpp:355:6:void DebugMon_Handler()	4	static
+cr_startup_lpc175x_6x.cpp:360:6:void PendSV_Handler()	4	static
+cr_startup_lpc175x_6x.cpp:365:6:void SysTick_Handler()	4	static
+cr_startup_lpc175x_6x.cpp:376:6:void IntDefaultHandler()	4	static
