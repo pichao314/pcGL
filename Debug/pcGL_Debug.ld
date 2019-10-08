@@ -6,7 +6,7 @@
  * Generated linker script file for LPC1769
  * Created from linkscript.ldt by FMCreateLinkLibraries
  * Using Freemarker v2.3.23
- * MCUXpresso IDE v11.0.1 [Build 2563] [2019-09-01] on Oct 7, 2019 9:37:20 PM
+ * MCUXpresso IDE v11.0.0 [Build 2516] [2019-06-05] on Oct 7, 2019 9:49:47 PM
  */
 
 INCLUDE "pcGL_Debug_library.ld"
@@ -139,9 +139,6 @@ SECTIONS
        _data = . ;
        *(vtable)
        *(.ramfunc*)
-       KEEP(*(CodeQuickAccess))
-       KEEP(*(DataQuickAccess))
-       *(RamFunction)
        *(.data*)
        . = ALIGN(4) ;
        _edata = . ;

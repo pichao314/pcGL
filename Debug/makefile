@@ -44,7 +44,7 @@ all: pcGL.axf
 pcGL.axf: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: MCU C++ Linker'
-	arm-none-eabi-c++ -nostdlib -L"/home/pichao/Documents/Source/MCU/CMSIS_CORE_LPC17xx/Debug" -Xlinker -Map="pcGL.map" -Xlinker --cref -Xlinker --gc-sections -Xlinker -print-memory-usage -mcpu=cortex-m3 -mthumb -T "pcGL_Debug.ld" -o "pcGL.axf" $(OBJS) $(USER_OBJS) $(LIBS)
+	arm-none-eabi-c++ -nostdlib -L"/Users/pc/Documents/GitHubRepo/MCU/CMSIS_CORE_LPC17xx/Debug" -Xlinker -Map="pcGL.map" -Xlinker --cref -Xlinker --gc-sections -Xlinker -print-memory-usage -mcpu=cortex-m3 -mthumb -T "pcGL_Debug.ld" -o "pcGL.axf" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 	$(MAKE) --no-print-directory post-build
