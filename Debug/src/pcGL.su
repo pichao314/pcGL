@@ -1,4 +1,21 @@
 gthr-default.h:229:1:int __gthread_key_delete(__gthread_key_t)	16	static
-pcGL.cpp:26:5:int main()	8	static
-pcGL.cpp:31:1:void __static_initialization_and_destruction_0(int, int)	16	static
-pcGL.cpp:31:1:cpp)	8	static
+pcGL.cpp:67:6:void spiwrite(uint8_t)	24	static
+pcGL.cpp:85:6:void writecommand(uint8_t)	16	static
+pcGL.cpp:97:6:void writedata(uint8_t)	16	static
+pcGL.cpp:109:6:void writeword(uint16_t)	24	static
+pcGL.cpp:127:6:void write888(uint32_t, uint32_t)	24	static
+pcGL.cpp:155:6:void setAddrWindow(uint16_t, uint16_t, uint16_t, uint16_t)	24	static
+pcGL.cpp:174:6:void fillrect(int16_t, int16_t, int16_t, int16_t, uint32_t)	32	static
+pcGL.cpp:196:6:void lcddelay(int)	24	static
+pcGL.cpp:210:6:void lcd_init()	16	static
+pcGL.cpp:254:6:void drawPixel(int16_t, int16_t, uint32_t)	16	static
+pcGL.cpp:270:4:Pt v2p(Pt)	32	static
+pcGL.cpp:277:6:void drawLine(Pt, Pt, float)	80	static
+pcGL.cpp:360:6:void drawRec(Pt*, uint32_t)	40	static
+pcGL.cpp:368:5:Pt* nextRec(Pt*, float, uint32_t)	40	static
+pcGL.cpp:379:6:void recreq(Pt*, int, float, uint32_t)	32	static
+pcGL.cpp:393:6:void draw2DCordinate()	48	static
+pcGL.cpp:403:6:void screenSaver()	48	static
+pcGL.cpp:408:5:int main()	24	static
+pcGL.cpp:426:1:void __static_initialization_and_destruction_0(int, int)	16	static
+pcGL.cpp:426:1:cpp)	8	static
