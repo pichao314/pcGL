@@ -383,6 +383,18 @@ int16_t v2py(float y)
     return _y;
 }
 
+float p2vx(int16_t x)
+{
+    float _x = 2.0 * x / _width - 1;
+    return _x;
+}
+
+float p2vy(int16_t y)
+{
+    float _y = 1 - 2.0 * y /_height;
+    return _y;
+}
+
 void drawFLine(float x0, float y0, float x1, float y1, uint32_t color)
 {
     drawLine(v2px(x0), v2py(y0), v2px(x1), v2py(y1), color);
@@ -615,8 +627,59 @@ void polygon::plot()
 
 
 /*
+===============================================================================
 
- Main Function main()
+The 3D point class
+
+===============================================================================
+*/
+
+class p3t
+{
+private:
+    float x,y,z;
+public:
+    p3t(float x, float y, float z);
+    float get_x();
+    float get_y();
+    float get_z();
+    ~p3t();
+};
+
+p3t::p3t(float x1, float y1, float z1)
+{
+    x = x1;
+    y = y1;
+    z = z1;
+}
+
+float p3t::get_x()
+{
+    return x;
+}
+
+float p3t::get_y()
+{
+    return y;
+}
+
+float p3t::get_z()
+{
+    return z;
+}
+
+p3t::~p3t()
+{
+}
+
+
+/*
+
+===============================================================================
+
+Lab and assignment
+
+===============================================================================
 
 */
 
@@ -681,6 +744,110 @@ void drawTree(float _rate, float _angle, int level)
     }
 }
 
+int cursor_x = 0, cursor_y = 0;
+int rotation = 0;
+int textsize = 1;
+int x_diff = 64;
+int y_diff = 80;
+
+int cam_x = 120;
+int cam_y = 120;
+int cam_z = 120;
+
+int light_x = 22;
+int light_y = 22;
+int light_z = 60;
+
+#define LOCATION_NUM    0
+int colstart = 0;
+int rowstart = 0;
+
+p2t world2viewer_coord(int x_w, int y_w, int z_w)
+{
+    int scrn_x, scrn_y, Dist=100,x_diff=ST7735_TFTWIDTH/2,y_diff=ST7735_TFTHEIGHT/2;
+    double x_p, y_p, z_p, theta,phi, rho;
+    theta = acos(cam_x/sqrt(pow(cam_x,2)+pow(cam_y,2)));
+    phi = acos(cam_z/sqrt(pow(cam_x,2)+pow(cam_y,2)+pow(cam_z,2)));
+    rho=sqrt((pow(cam_x,2))+(pow(cam_y,2))+(pow(cam_z,2)));
+    x_p = (y_w*cos(theta))-(x_w*sin(theta));
+    y_p = (z_w*sin(phi))-(x_w*cos(theta)*cos(phi))-(y_w*cos(phi)*sin(theta));
+    z_p = rho-(y_w*sin(phi)*cos(theta))-(x_w*sin(phi)*cos(theta))-(z_w*cos(phi));
+    scrn_x = x_p*Dist/z_p;
+    scrn_y = y_p*Dist/z_p;
+    scrn_x = x_diff+scrn_x;
+    scrn_y = y_diff-scrn_y;
+
+    float nx = p2vx(scrn_x);
+    float ny = p2vy(scrn_y);
+
+    p2t screen(nx,ny,RED);
+    return screen;
+}
+
+void draw3D()
+{
+    vector<p2t> cords;
+    cords.push_back(world2viewer_coord(0,0,0));
+    cords.push_back(world2viewer_coord(180,0,0));
+    cords.push_back(world2viewer_coord(0,180,0));
+    cords.push_back(world2viewer_coord(0,0,180));
+    int32_t colors[3] = {RED, GREEN, BLUE};
+
+    for (int i = 1; i < 4; i++)
+    {
+        drawFLine(cords[0].get_x(),cords[0].get_y(), cords[i].get_x(), cords[i].get_y(), colors[i-1]);
+    }
+}
+
+float getLambda(p3t light, p3t point, p3t arbi, p3t norm)
+{
+    p3t up(arbi.get_x() - point.get_x(), arbi.get_y() - point.get_y(), arbi.get_z() - point.get_z());
+    p3t down(light.get_x() - point.get_x(), light.get_y() - point.get_y(), light.get_z() - point.get_z());
+    float lambda = (norm.get_x()*up.get_x() + norm.get_y()*up.get_y()+norm.get_z()*up.get_z())/(norm.get_x()*down.get_x() + norm.get_y()*down.get_y()+norm.get_z()*down.get_z());
+    return lambda;
+}
+
+void drawShadow()
+{
+
+    p3t a(0,0,100);
+    p3t b(0,100,0);
+    p3t c(100,100,100);
+    p3t d(100,0,0);
+
+    vector<p3t> top = {a,b,c,d};
+
+    p3t light(-5,50,200);
+    p3t norm(0,0,1);
+    p3t ori(0,0,0);
+    vector<p2t> tp;
+
+    for (int i = 0; i < top.size(); i++)
+    {
+        tp.push_back(world2viewer_coord(top[i].get_x(), top[i].get_y(), top[i].get_z()));
+    }
+    
+    polygon topsquare(tp,GREEN);
+    topsquare.plot();
+
+    vector<p2t> proj;
+
+    for (int i = 0; i < top.size(); i++){
+        float lambda = getLambda(light, top[i], ori, norm);
+        float x = top[i].get_x() + lambda * (light.get_x() - top[i].get_x());
+        float y = top[i].get_y() + lambda * (light.get_x() - top[i].get_x());
+        float z = top[i].get_x() + lambda * (light.get_x() - top[i].get_x());
+        proj.push_back(world2viewer_coord(x,y,z));
+    }
+
+    p2t lit = world2viewer_coord(light.get_x(), light.get_y(), light.get_z());
+
+    for (int i = 0; i < proj.size(); i++)
+    {
+        drawLine(lit.get_x(), lit.get_y(),proj[i].get_x(),proj[i].get_y(),RED);
+    }
+}
+
 int main (void)
 
 {
@@ -699,8 +866,9 @@ int main (void)
 
 	fillrect(0, 0, ST7735_TFTWIDTH, ST7735_TFTHEIGHT, BLACK);
 
-    drawTree(0.7,35,10);
-
+    //drawTree(0.7,35,10);
+    draw3D();
+    drawShadow();
 
 	return 0;
 

@@ -16,32 +16,43 @@ pcGL.cpp:202:6:void lcddelay(int)	24	static
 pcGL.cpp:216:6:void lcd_init()	16	static
 pcGL.cpp:261:6:void drawPixel(int16_t, int16_t, uint32_t)	16	static
 pcGL.cpp:295:6:void drawLine(int16_t, int16_t, int16_t, int16_t, uint32_t)	40	static
-pcGL.cpp:368:9:int16_t v2px(float)	32	static
-pcGL.cpp:376:9:int16_t v2py(float)	32	static
-pcGL.cpp:384:6:void drawFLine(float, float, float, float, uint32_t)	48	static
-pcGL.cpp:430:6:void p2t::out()	16	static
-pcGL.cpp:435:1:p2t::p2t(float, float, uint32_t)	32	static
-pcGL.cpp:445:1:p2t::p2t(const p2t&)	16	static
-pcGL.cpp:453:6:void p2t::set(float, float, uint32_t)	32	static
-pcGL.cpp:462:7:float p2t::get_x() const	16	static
-pcGL.cpp:466:7:float p2t::get_y() const	16	static
-pcGL.cpp:471:10:uint32_t p2t::get_color() const	16	static
-pcGL.cpp:476:7:float p2t::get_r() const	16	static
-pcGL.cpp:482:5:p2t p2t::rotate(float, p2t)	48	static
-pcGL.cpp:500:1:p2t::~p2t()	16	static
-pcGL.cpp:546:6:void polygon::out()	24	static
-pcGL.cpp:554:1:polygon::polygon(std::vector<p2t>, uint32_t)	40	static
-pcGL.cpp:564:1:polygon::polygon(const polygon&)	32	static
-pcGL.cpp:569:1:polygon::~polygon()	16	static
-pcGL.cpp:574:6:void polygon::set(std::vector<p2t>, uint32_t)	56	static
-pcGL.cpp:579:13:std::vector<p2t> polygon::get() const	16	static
-pcGL.cpp:584:6:void polygon::shrink(float)	48	static
-pcGL.cpp:603:6:void polygon::plot()	48	static
-pcGL.cpp:621:6:void rotateSquare()	232	static
+pcGL.cpp:370:9:int16_t v2px(float)	32	static
+pcGL.cpp:378:9:int16_t v2py(float)	32	static
+pcGL.cpp:386:7:float p2vx(int16_t)	32	static
+pcGL.cpp:392:7:float p2vy(int16_t)	32	static
+pcGL.cpp:398:6:void drawFLine(float, float, float, float, uint32_t)	48	static
+pcGL.cpp:444:6:void p2t::out()	16	static
+pcGL.cpp:449:1:p2t::p2t(float, float, uint32_t)	32	static
+pcGL.cpp:459:1:p2t::p2t(const p2t&)	16	static
+pcGL.cpp:467:6:void p2t::set(float, float, uint32_t)	32	static
+pcGL.cpp:476:7:float p2t::get_x() const	16	static
+pcGL.cpp:480:7:float p2t::get_y() const	16	static
+pcGL.cpp:485:10:uint32_t p2t::get_color() const	16	static
+pcGL.cpp:490:7:float p2t::get_r() const	16	static
+pcGL.cpp:496:5:p2t p2t::rotate(float, p2t)	48	static
+pcGL.cpp:514:1:p2t::~p2t()	16	static
+pcGL.cpp:560:6:void polygon::out()	24	static
+pcGL.cpp:568:1:polygon::polygon(std::vector<p2t>, uint32_t)	40	static
+pcGL.cpp:578:1:polygon::polygon(const polygon&)	32	static
+pcGL.cpp:583:1:polygon::~polygon()	16	static
+pcGL.cpp:588:6:void polygon::set(std::vector<p2t>, uint32_t)	56	static
+pcGL.cpp:593:13:std::vector<p2t> polygon::get() const	16	static
+pcGL.cpp:598:6:void polygon::shrink(float)	48	static
+pcGL.cpp:617:6:void polygon::plot()	48	static
+pcGL.cpp:649:1:p3t::p3t(float, float, float)	24	static
+pcGL.cpp:656:7:float p3t::get_x()	16	static
+pcGL.cpp:661:7:float p3t::get_y()	16	static
+pcGL.cpp:666:7:float p3t::get_z()	16	static
+pcGL.cpp:671:1:p3t::~p3t()	16	static
+pcGL.cpp:686:6:void rotateSquare()	232	static
 cmath:415:5:constexpr typename __gnu_cxx::__promote_2<_Tp, _Up>::__type std::pow(_Tp, _Up) [with _Tp = int; _Up = int]	24	static
 stl_list.h:835:7:std::__cxx11::list<_Tp, _Alloc>::~list() [with _Tp = p2t; _Alloc = std::allocator<p2t>]	16	static
-pcGL.cpp:640:6:void drawTree(float, float, int)	272	static
-pcGL.cpp:682:5:int main()	24	static
+pcGL.cpp:705:6:void drawTree(float, float, int)	272	static
+pcGL.cpp:765:5:p2t world2viewer_coord(int, int, int)	120	static
+pcGL.cpp:787:6:void draw3D()	128	static
+pcGL.cpp:802:7:float getLambda(p3t, p3t, p3t, p3t)	72	static
+pcGL.cpp:810:6:void drawShadow()	368	static
+pcGL.cpp:851:5:int main()	24	static
 stl_vector.h:805:7:std::vector<_Tp, _Alloc>::size_type std::vector<_Tp, _Alloc>::size() const [with _Tp = p2t; _Alloc = std::allocator<p2t>]	16	static
 stl_vector.h:930:7:std::vector<_Tp, _Alloc>::reference std::vector<_Tp, _Alloc>::operator[](std::vector<_Tp, _Alloc>::size_type) [with _Tp = p2t; _Alloc = std::allocator<p2t>]	16	static
 stl_vector.h:391:7:std::vector<_Tp, _Alloc>::vector() [with _Tp = p2t; _Alloc = std::allocator<p2t>]	16	static
@@ -64,6 +75,16 @@ stl_list.h:506:7:std::__cxx11::_List_base<_Tp, _Alloc>::~_List_base() [with _Tp 
 stl_list.h:1122:7:std::__cxx11::list<_Tp, _Alloc>::reference std::__cxx11::list<_Tp, _Alloc>::front() [with _Tp = p2t; _Alloc = std::allocator<p2t>]	24	static
 stl_list.h:1205:7:void std::__cxx11::list<_Tp, _Alloc>::pop_front() [with _Tp = p2t; _Alloc = std::allocator<p2t>]	16	static
 stl_list.h:1219:7:void std::__cxx11::list<_Tp, _Alloc>::push_back(const value_type&) [with _Tp = p2t; _Alloc = std::allocator<p2t>]	16	static
+move.h:99:5:constexpr typename std::remove_reference<_Tp>::type&& std::move(_Tp&&) [with _Tp = p2t&]	16	static
+stl_vector.h:1090:7:void std::vector<_Tp, _Alloc>::push_back(std::vector<_Tp, _Alloc>::value_type&&) [with _Tp = p2t; _Alloc = std::allocator<p2t>]	16	static
+allocator.h:131:7:std::allocator< <template-parameter-1-1> >::allocator() [with _Tp = p3t]	16	static
+allocator.h:139:7:std::allocator< <template-parameter-1-1> >::~allocator() [with _Tp = p3t]	16	static
+initializer_list:75:7:constexpr const _E* std::initializer_list<_E>::begin() const [with _E = p3t]	16	static
+initializer_list:79:7:constexpr const _E* std::initializer_list<_E>::end() const [with _E = p3t]	24	static
+stl_vector.h:515:7:std::vector<_Tp, _Alloc>::vector(std::initializer_list<_Tp>, const allocator_type&) [with _Tp = p3t; _Alloc = std::allocator<p3t>]	40	static
+stl_vector.h:565:7:std::vector<_Tp, _Alloc>::~vector() [with _Tp = p3t; _Alloc = std::allocator<p3t>]	24	static
+stl_vector.h:805:7:std::vector<_Tp, _Alloc>::size_type std::vector<_Tp, _Alloc>::size() const [with _Tp = p3t; _Alloc = std::allocator<p3t>]	16	static
+stl_vector.h:930:7:std::vector<_Tp, _Alloc>::reference std::vector<_Tp, _Alloc>::operator[](std::vector<_Tp, _Alloc>::size_type) [with _Tp = p3t; _Alloc = std::allocator<p3t>]	16	static
 stl_vector.h:88:14:std::_Vector_base<p2t, std::allocator<p2t> >::_Vector_impl::~_Vector_impl()	16	static
 stl_vector.h:248:7:std::_Vector_base<_Tp, _Alloc>::_Vector_base() [with _Tp = p2t; _Alloc = std::allocator<p2t>]	16	static
 stl_vector.h:283:7:std::_Vector_base<_Tp, _Alloc>::~_Vector_base() [with _Tp = p2t; _Alloc = std::allocator<p2t>]	16	static
@@ -96,6 +117,17 @@ stl_list.h:209:7:_Tp& std::_List_iterator< <template-parameter-1-1> >::operator*
 stl_list.h:1911:7:void std::__cxx11::list<_Tp, _Alloc>::_M_erase(std::__cxx11::list<_Tp, _Alloc>::iterator) [with _Tp = p2t; _Alloc = std::allocator<p2t>]	32	static
 stl_list.h:971:7:std::__cxx11::list<_Tp, _Alloc>::iterator std::__cxx11::list<_Tp, _Alloc>::end() [with _Tp = p2t; _Alloc = std::allocator<p2t>]	24	static
 stl_list.h:1901:8:) [with _Args = {const p2t&}; _Tp = p2t; _Alloc = std::allocator<p2t>]	32	static
+move.h:74:5:constexpr _Tp&& std::forward(typename std::remove_reference<_Tp>::type&) [with _Tp = p2t]	16	static
+vector.tcc:97:7:) [with _Args = {p2t}; _Tp = p2t; _Alloc = std::allocator<p2t>]	24	static
+new_allocator.h:79:7:__gnu_cxx::new_allocator<_Tp>::new_allocator() [with _Tp = p3t]	16	static
+new_allocator.h:86:7:__gnu_cxx::new_allocator<_Tp>::~new_allocator() [with _Tp = p3t]	16	static
+stl_vector.h:88:14:std::_Vector_base<p3t, std::allocator<p3t> >::_Vector_impl::~_Vector_impl()	16	static
+stl_vector.h:251:7:std::_Vector_base<_Tp, _Alloc>::_Vector_base(const allocator_type&) [with _Tp = p3t; _Alloc = std::allocator<p3t>]	16	static
+stl_vector.h:283:7:std::_Vector_base<_Tp, _Alloc>::~_Vector_base() [with _Tp = p3t; _Alloc = std::allocator<p3t>]	16	static
+initializer_list:71:7:constexpr std::initializer_list<_E>::size_type std::initializer_list<_E>::size() const [with _E = p3t]	16	static
+stl_vector.h:1462:2:void std::vector<_Tp, _Alloc>::_M_range_initialize(_ForwardIterator, _ForwardIterator, std::forward_iterator_tag) [with _ForwardIterator = const p3t*; _Tp = p3t; _Alloc = std::allocator<p3t>]	40	static
+stl_vector.h:237:7:std::_Vector_base<_Tp, _Alloc>::_Tp_alloc_type& std::_Vector_base<_Tp, _Alloc>::_M_get_Tp_allocator() [with _Tp = p3t; _Alloc = std::allocator<p3t>]	16	static
+stl_construct.h:203:5:void std::_Destroy(_ForwardIterator, _ForwardIterator, std::allocator<_T2>&) [with _ForwardIterator = p3t*; _Tp = p3t]	24	static
 stl_vector.h:95:2:std::_Vector_base<_Tp, _Alloc>::_Vector_impl::_Vector_impl() [with _Tp = p2t; _Alloc = std::allocator<p2t>]	16	static
 stl_vector.h:300:7:void std::_Vector_base<_Tp, _Alloc>::_M_deallocate(std::_Vector_base<_Tp, _Alloc>::pointer, std::size_t) [with _Tp = p2t; _Alloc = std::allocator<p2t>]	24	static
 stl_construct.h:127:5:void std::_Destroy(_ForwardIterator, _ForwardIterator) [with _ForwardIterator = p2t*]	16	static
@@ -125,6 +157,15 @@ stl_list.h:200:7:std::_List_iterator< <template-parameter-1-1> >::_List_iterator
 stl_list.h:418:12:void std::__cxx11::_List_base<_Tp, _Alloc>::_M_dec_size(std::size_t) [with _Tp = p2t; _Alloc = std::allocator<p2t>]	16	static
 stl_list.h:640:2:) [with _Args = {const p2t&}; _Tp = p2t; _Alloc = std::allocator<p2t>]	40	static
 stl_list.h:416:12:void std::__cxx11::_List_base<_Tp, _Alloc>::_M_inc_size(std::size_t) [with _Tp = p2t; _Alloc = std::allocator<p2t>]	16	static
+alloc_traits.h:474:2:) [with _Up = p2t; _Args = {p2t}; _Tp = p2t]	24	static
+vector.tcc:413:7:) [with _Args = {p2t}; _Tp = p2t; _Alloc = std::allocator<p2t>]	64	static
+stl_vector.h:99:2:std::_Vector_base<_Tp, _Alloc>::_Vector_impl::_Vector_impl(const _Tp_alloc_type&) [with _Tp = p3t; _Alloc = std::allocator<p3t>]	16	static
+stl_vector.h:300:7:void std::_Vector_base<_Tp, _Alloc>::_M_deallocate(std::_Vector_base<_Tp, _Alloc>::pointer, std::size_t) [with _Tp = p3t; _Alloc = std::allocator<p3t>]	24	static
+stl_iterator_base_types.h:205:5:constexpr typename std::iterator_traits<_Iterator>::iterator_category std::__iterator_category(const _Iter&) [with _Iter = const p3t*]	16	static
+stl_iterator_base_funcs.h:138:5:typename std::iterator_traits<_Iterator>::difference_type std::distance(_InputIterator, _InputIterator) [with _InputIterator = const p3t*]	32	static
+stl_vector.h:293:7:std::_Vector_base<_Tp, _Alloc>::pointer std::_Vector_base<_Tp, _Alloc>::_M_allocate(std::size_t) [with _Tp = p3t; _Alloc = std::allocator<p3t>]	16	static
+stl_uninitialized.h:287:5:_ForwardIterator std::__uninitialized_copy_a(_InputIterator, _InputIterator, _ForwardIterator, std::allocator<_Tp>&) [with _InputIterator = const p3t*; _ForwardIterator = p3t*; _Tp = p3t]	24	static
+stl_construct.h:127:5:void std::_Destroy(_ForwardIterator, _ForwardIterator) [with _ForwardIterator = p3t*]	16	static
 alloc_traits.h:461:7:static void std::allocator_traits<std::allocator<_CharT> >::deallocate(std::allocator_traits<std::allocator<_CharT> >::allocator_type&, std::allocator_traits<std::allocator<_CharT> >::pointer, std::allocator_traits<std::allocator<_CharT> >::size_type) [with _Tp = p2t]	24	static
 move.h:47:5:constexpr _Tp* std::__addressof(_Tp&) [with _Tp = p2t]	16	static
 stl_construct.h:105:9:static void std::_Destroy_aux<<anonymous> >::__destroy(_ForwardIterator, _ForwardIterator) [with _ForwardIterator = p2t*; bool <anonymous> = false]	16	static
@@ -145,6 +186,14 @@ allocated_ptr.h:52:7:std::__allocated_ptr<_Alloc>::__allocated_ptr(_Alloc&, std:
 allocated_ptr.h:70:7:std::__allocated_ptr<_Alloc>::~__allocated_ptr() [with _Alloc = std::allocator<std::_List_node<p2t> >]	16	static
 alloc_traits.h:474:2:) [with _Up = p2t; _Args = {const p2t&}; _Tp = std::_List_node<p2t>]	24	static
 allocated_ptr.h:78:7:std::__allocated_ptr<_Alloc>& std::__allocated_ptr<_Alloc>::operator=(std::nullptr_t) [with _Alloc = std::allocator<std::_List_node<p2t> >]	16	static
+new_allocator.h:135:2:) [with _Up = p2t; _Args = {p2t}; _Tp = p2t]	32	static
+allocator.h:133:7:std::allocator< <template-parameter-1-1> >::allocator(const std::allocator< <template-parameter-1-1> >&) [with _Tp = p3t]	16	static
+alloc_traits.h:461:7:static void std::allocator_traits<std::allocator<_CharT> >::deallocate(std::allocator_traits<std::allocator<_CharT> >::allocator_type&, std::allocator_traits<std::allocator<_CharT> >::pointer, std::allocator_traits<std::allocator<_CharT> >::size_type) [with _Tp = p3t]	24	static
+stl_iterator_base_funcs.h:98:5:constexpr typename std::iterator_traits<_Iterator>::difference_type std::__distance(_RandomAccessIterator, _RandomAccessIterator, std::random_access_iterator_tag) [with _RandomAccessIterator = const p3t*]	24	static
+alloc_traits.h:435:7:static _Tp* std::allocator_traits<std::allocator<_CharT> >::allocate(std::allocator_traits<std::allocator<_CharT> >::allocator_type&, std::allocator_traits<std::allocator<_CharT> >::size_type) [with _Tp = p3t]	16	static
+stl_uninitialized.h:115:5:_ForwardIterator std::uninitialized_copy(_InputIterator, _InputIterator, _ForwardIterator) [with _InputIterator = const p3t*; _ForwardIterator = p3t*]	32	static
+move.h:47:5:constexpr _Tp* std::__addressof(_Tp&) [with _Tp = p3t]	16	static
+stl_construct.h:105:9:static void std::_Destroy_aux<<anonymous> >::__destroy(_ForwardIterator, _ForwardIterator) [with _ForwardIterator = p3t*; bool <anonymous> = false]	16	static
 new_allocator.h:116:7:void __gnu_cxx::new_allocator<_Tp>::deallocate(__gnu_cxx::new_allocator<_Tp>::pointer, __gnu_cxx::new_allocator<_Tp>::size_type) [with _Tp = p2t]	24	static
 stl_construct.h:97:5:void std::_Destroy(_Tp*) [with _Tp = p2t]	16	static
 alloc_traits.h:495:7:static std::allocator_traits<std::allocator<_CharT> >::size_type std::allocator_traits<std::allocator<_CharT> >::max_size(const allocator_type&) [with _Tp = p2t]	16	static
@@ -160,9 +209,17 @@ new_allocator.h:116:7:void __gnu_cxx::new_allocator<_Tp>::deallocate(__gnu_cxx::
 alloc_traits.h:435:7:static _Tp* std::allocator_traits<std::allocator<_CharT> >::allocate(std::allocator_traits<std::allocator<_CharT> >::allocator_type&, std::allocator_traits<std::allocator<_CharT> >::size_type) [with _Tp = std::_List_node<p2t>]	16	static
 move.h:47:5:constexpr _Tp* std::__addressof(_Tp&) [with _Tp = std::allocator<std::_List_node<p2t> >]	16	static
 new_allocator.h:135:2:) [with _Up = p2t; _Args = {const p2t&}; _Tp = std::_List_node<p2t>]	32	static
+new_allocator.h:81:7:__gnu_cxx::new_allocator<_Tp>::new_allocator(const __gnu_cxx::new_allocator<_Tp>&) [with _Tp = p3t]	16	static
+new_allocator.h:116:7:void __gnu_cxx::new_allocator<_Tp>::deallocate(__gnu_cxx::new_allocator<_Tp>::pointer, __gnu_cxx::new_allocator<_Tp>::size_type) [with _Tp = p3t]	24	static
+new_allocator.h:99:7:_Tp* __gnu_cxx::new_allocator<_Tp>::allocate(__gnu_cxx::new_allocator<_Tp>::size_type, const void*) [with _Tp = p3t]	24	static
+stl_uninitialized.h:76:9:static _ForwardIterator std::__uninitialized_copy<_TrivialValueTypes>::__uninit_copy(_InputIterator, _InputIterator, _ForwardIterator) [with _InputIterator = const p3t*; _ForwardIterator = p3t*; bool _TrivialValueTypes = false]	32	static
+stl_construct.h:97:5:void std::_Destroy(_Tp*) [with _Tp = p3t]	16	static
 new_allocator.h:129:7:__gnu_cxx::new_allocator<_Tp>::size_type __gnu_cxx::new_allocator<_Tp>::max_size() const [with _Tp = p2t]	16	static
 stl_iterator.h:848:7:const _Iterator& __gnu_cxx::__normal_iterator<_Iterator, _Container>::base() const [with _Iterator = const p2t*; _Container = std::vector<p2t>]	16	static
 new_allocator.h:99:7:_Tp* __gnu_cxx::new_allocator<_Tp>::allocate(__gnu_cxx::new_allocator<_Tp>::size_type, const void*) [with _Tp = std::_List_node<p2t>]	24	static
+new_allocator.h:129:7:__gnu_cxx::new_allocator<_Tp>::size_type __gnu_cxx::new_allocator<_Tp>::max_size() const [with _Tp = p3t]	16	static
+move.h:74:5:constexpr _Tp&& std::forward(typename std::remove_reference<_Tp>::type&) [with _Tp = const p3t&]	16	static
+stl_construct.h:74:5:) [with _T1 = p3t; _Args = {const p3t&}]	24	static
 new_allocator.h:129:7:__gnu_cxx::new_allocator<_Tp>::size_type __gnu_cxx::new_allocator<_Tp>::max_size() const [with _Tp = std::_List_node<p2t>]	16	static
-pcGL.cpp:705:1:void __static_initialization_and_destruction_0(int, int)	16	static
-pcGL.cpp:705:1:cpp)	8	static
+pcGL.cpp:875:1:void __static_initialization_and_destruction_0(int, int)	16	static
+pcGL.cpp:875:1:cpp)	8	static
