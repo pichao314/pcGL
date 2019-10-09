@@ -48,7 +48,7 @@ float p2t::get_r() const
 
 ostream& operator<<(ostream& os, const p2t& pt)
 {
-    os << '(' << pt.get_x() << ' , '<<pt.get_y()<<')';
+    os << '(' << pt.get_x() << " , " <<pt.get_y()<<')';
     return os;
 }
 

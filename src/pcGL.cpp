@@ -104,6 +104,8 @@ void lcd_init()
     LPC_GPIO0->FIOSET |= (0x1<<22);
     lcddelay(500);
 
+    cout << "Hardware Reseted!\n";
+
     // initialize buffers
     for ( i = 0; i < SSP_BUFSIZE; i++ )
     {
@@ -111,13 +113,19 @@ void lcd_init()
         dest_addr[i] = 0;
     }
 
+    cout << "Buffer initted\n";
+
     // Take LCD display out of sleep mode
     writecommand(ST7735_SLPOUT);
     lcddelay(200);
 
+    cout << "LCD slpout\n";
+
     // Turn LCD display on
     writecommand(ST7735_DISPON);
     lcddelay(200);
+
+    cout << "LCD display on\n";
 
 }
 
@@ -197,7 +205,6 @@ void drawLine(float x0 = 0, float y0 = 0, float x1 = 0, float y1 = 0, uint32_t c
 void init()
 {
     uint32_t pnum = PORT_NUM, width = ST7735_TFTWIDTH / 5, len;
-	pnum = 1 ;
 
 	srand(time(NULL));
 
@@ -205,6 +212,8 @@ void init()
 		SSP1Init();
 	else
 		puts("Port number is not correct");
+    
+    //cout << "Port number checked!"<<endl;
 	lcd_init();
     fillrect(0, 0, ST7735_TFTWIDTH, ST7735_TFTHEIGHT, BLACK);
 }
