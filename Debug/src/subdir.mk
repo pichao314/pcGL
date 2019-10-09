@@ -4,31 +4,25 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 CPP_SRCS += \
-../src/2dUtility.cpp \
 ../src/cr_cpp_config.cpp \
 ../src/cr_startup_lpc175x_6x.cpp \
 ../src/crp.cpp \
 ../src/pcGL.cpp \
-../src/ssp.cpp \
-../src/test.cpp 
+../src/ssp.cpp 
 
 OBJS += \
-./src/2dUtility.o \
 ./src/cr_cpp_config.o \
 ./src/cr_startup_lpc175x_6x.o \
 ./src/crp.o \
 ./src/pcGL.o \
-./src/ssp.o \
-./src/test.o 
+./src/ssp.o 
 
 CPP_DEPS += \
-./src/2dUtility.d \
 ./src/cr_cpp_config.d \
 ./src/cr_startup_lpc175x_6x.d \
 ./src/crp.d \
 ./src/pcGL.d \
-./src/ssp.d \
-./src/test.d 
+./src/ssp.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes

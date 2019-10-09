@@ -20,6 +20,7 @@
 #include <cstdlib>
 #include <string>
 #include <vector>
+#include <list>
 #include <cmath>
 #include <time.h>
 
@@ -433,7 +434,7 @@ void p2t::out()
   cout << "( "<<_x<<" , "<<_y<<" )";
 }
 
-p2t::p2t(float x = 0, float y = 0, uint32_t color = 0x000000)
+p2t::p2t(float x, float y, uint32_t color)
 {
     _x = x;
     _y = y;
@@ -494,7 +495,7 @@ p2t p2t::rotate(float angle, p2t center)
     float dy = _y - center.get_y();
 
     //Build a new p2t with rotated location
-    p2t point( dx*c - dy*s + center.get_x(), dx*s + dy*c + center.get_y());
+    p2t point( dx*c - dy*s + center.get_x(), dx*s + dy*c + center.get_y(),_color);
     return point;
 }
 
@@ -638,6 +639,48 @@ void rotateSquare()
    
 }
 
+void drawTree(float _rate, float _angle, int level)
+{
+    float rate = _rate;
+    float angle = _angle;
+    int limit = pow(3,level)/2;
+    p2t start(0,-1,GREEN);
+    p2t stop(0,-0.5,GREEN);
+    list<p2t> tree = {start, stop};
+    for (int i = 0; i < limit; i ++)
+    {
+        //cout << "This is no " << i << "branch\n-----------------------------\n";
+        p2t start = tree.front();
+        tree.pop_front();
+        //cout << "The start is ";
+        //start.out();
+        p2t stop = tree.front();
+        tree.pop_front();
+        //cout << "The stop is ";
+        //stop.out();
+        drawFLine(start.get_x(), start.get_y(), stop.get_x(), stop.get_y(), GREEN);
+        float a = stop.get_x() + rate * (stop.get_x() - start.get_x());
+        float b = stop.get_y() + rate * (stop.get_y() - start.get_y());
+        //cout << "a,b is " << a << ' ' << b << endl;
+        p2t mid(a,b, GREEN);
+        //cout << "The mid is ";
+        //mid.out();
+        tree.push_back(stop);
+        tree.push_back(mid);
+        p2t left = mid.rotate(angle,stop);
+        //cout << "The left is ";
+        //left.out();
+        tree.push_back(stop);
+        tree.push_back(left);        
+        p2t right = mid.rotate(360-angle, stop);
+        //cout << "The right is ";
+        //right.out();
+        tree.push_back(stop);
+        tree.push_back(right);
+        //cout << endl;
+    }
+}
+
 int main (void)
 
 {
@@ -656,8 +699,7 @@ int main (void)
 
 	fillrect(0, 0, ST7735_TFTWIDTH, ST7735_TFTHEIGHT, BLACK);
 
-
-
+    drawTree(0.7,35,10);
 
 
 	return 0;
