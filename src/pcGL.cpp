@@ -1,46 +1,4 @@
-/*
-===============================================================================
- Name        : pcGL.cpp
- Author      : $pichao314
- Version     :
- Copyright   : $(copyright)
- Description : main definition
-===============================================================================
-*/
-
-#include <cr_section_macros.h>
-#include <NXP/crp.h>
-#include "LPC17xx.h"  
-#include "ssp.h"
-
-/* Be careful with the port number and location number, because
-
-some of the location may not exist in that port. */
-
-#define PORT_NUM          0
-
-uint8_t src_addr[SSP_BUFSIZE];
-uint8_t dest_addr[SSP_BUFSIZE];
-
-#define ST7735_TFTWIDTH   127
-#define ST7735_TFTHEIGHT  159
-
-#define ST7735_CASET      0x2A
-#define ST7735_RASET      0x2B
-#define ST7735_RAMWR      0x2C
-#define ST7735_SLPOUT     0x11
-#define ST7735_DISPON     0x29
-
-#define swap(x, y)        {x = x + y; y = x - y; x = x - y ;}
-
-// defining color values
-
-#define GREEN             0x00FF00
-#define BLACK             0x000000
-#define BLUE              0x0007FF
-#define RED               0xFF0000
-#define WHITE             0xFFFFFF
-#define PURPLE            0xCC33FF
+#include "pcGL.h"
 
 int _height = ST7735_TFTHEIGHT;
 int _width  = ST7735_TFTWIDTH;
@@ -159,7 +117,7 @@ void lcd_init()
 
 }
 
-void drawPixel(int16_t x, int16_t y, uint32_t color)
+void drawPixel(int16_t x = 0, int16_t y = 0, uint32_t color = 0xFFFFFF)
 {
     if ((x < 0) || (x >= _width) || (y < 0) || (y >= _height))
         return;
@@ -169,7 +127,7 @@ void drawPixel(int16_t x, int16_t y, uint32_t color)
     write888(color, 1);
 }
 
-void drawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint32_t color)
+void drawLine(int16_t x0 = 0, int16_t y0 = 0, int16_t x1 = 0, int16_t y1 = 0, uint32_t color = 0xFFFFFF)
 {
     int16_t slope = abs(y1 - y0) > abs(x1 - x0);
 
@@ -227,7 +185,7 @@ int16_t v2py(float y)
     return (1 - y) * _height / 2;
 }
 
-void drawLine(float x0, float y0, float x1, float y1, uint32_t color)
+void drawLine(float x0 = 0, float y0 = 0, float x1 = 0, float y1 = 0, uint32_t color = 0xFFFFFF)
 {
     drawLine(v2px(x0), v2py(y0), v2px(x1), v2py(y1), color);
 }
