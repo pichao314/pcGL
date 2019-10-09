@@ -37,21 +37,47 @@ public:
     polygon(const polygon& plg);
     ~polygon();
     void set(const vector<p2t> plg, __uint32_t color);
+    vector<p2t> get()const;
     void shrink(float rate);
     void plot();
 };
 
-polygon::polygon(vector<p2t> plg)
+polygon::polygon(vector<p2t> plg, __uint32_t color = 0x000000)
 {
-    
+    for (vector<p2t>::iterator it = plg.begin(); it != plg.end(); ++it)
+    {
+        corner.push_back(*it);
+    }
+
+    _color = color;
 }
 
 polygon::polygon(const polygon& plg)
 {
-
+    vector<p2t> corner = plg.get();
 }
 
 polygon::~polygon()
+{
+    
+}
+
+void polygon::set(const vector<p2t> plg, __uint32_t color = 0x000000)
+{
+    polygon(plg, color);
+}
+
+vector<p2t> polygon::get() const
+{
+    return corner;
+}
+
+void polygon::shrink(float rate)
+{
+
+}
+
+void polygon::plot()
 {
     
 }
