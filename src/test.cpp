@@ -1,8 +1,6 @@
-#include <iostream>
-#include "test.h"
+#include "2dUtility.h"
 
-using namespace std;
-
-void msg(){
-    cout << MSG << endl;
+int main()
+{
+    return 0;
 }

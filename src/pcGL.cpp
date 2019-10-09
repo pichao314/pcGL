@@ -1,5 +1,6 @@
 #include "pcGL.h"
 
+
 int _height = ST7735_TFTHEIGHT;
 int _width  = ST7735_TFTWIDTH;
 
@@ -10,7 +11,7 @@ void spiwrite(uint8_t c)
 
     SSP_SSELToggle( pnum, 0 );
     SSPSend( pnum, (uint8_t *)src_addr, 1 );
-    SP_SSELToggle( pnum, 1 );
+    SSP_SSELToggle( pnum, 1 );
 }
 
 void writecommand(uint8_t c)
@@ -85,7 +86,7 @@ void lcd_init()
 {
     int i;
 
-    printf("LCD Demo Begins!!!\n");
+    cout << "PCGL Demo Begins~~~" << endl;
 
     // Set pins P0.16, P0.21, P0.22 as output
     LPC_GPIO0->FIODIR |= (0x1<<16);

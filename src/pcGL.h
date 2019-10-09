@@ -15,12 +15,14 @@
 #include <NXP/crp.h>
 #include "LPC17xx.h"  
 #include "ssp.h"
+#include <iostream>
 
+using namespace std;
 /* Be careful with the port number and location number, because
 
 some of the location may not exist in that port. */
 
-#define PORT_NUM          0
+#define PORT_NUM          1
 
 uint8_t src_addr[SSP_BUFSIZE];
 uint8_t dest_addr[SSP_BUFSIZE];

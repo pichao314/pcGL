@@ -48,7 +48,7 @@ float p2t::get_r() const
 
 ostream& operator<<(ostream& os, const p2t& pt)
 {
-    os << '(' << pt.get_x << ' , '<<pt.get_y<<')';
+    os << '(' << pt.get_x() << ' , '<<pt.get_y()<<')';
     return os;
 }
 
@@ -66,7 +66,7 @@ p2t p2t::rotate(float angle, p2t center)
     float dy = _y - center.get_y();
 
     //Build a new p2t with rotated location
-    p2t point = new p2t( dx*c - dy*s + center.get_x, dx*s + dy*c + center.get_y);
+    p2t point( dx*c - dy*s + center.get_x(), dx*s + dy*c + center.get_y());
     return point;
 }
 
@@ -111,17 +111,17 @@ void polygon::shrink(float rate)
     int n = corner.size();
 
     //save the temp value for last calculate
-    float tmp_x = corner[0].get_x;
-    float tmp_y = corner[0].get_y;
+    float tmp_x = corner[0].get_x();
+    float tmp_y = corner[0].get_y();
 
     //calculate the new location by new = new + rate * (new - old)
     for (int i = 0; i < n - 1; i++)
     {
-        corner[i].set(corner[i].get_x + rate * (corner[i].get_x - corner[i+1].get_x), corner[i].get_y + rate * (corner[i+1].get_y-corner[i].get_y));
+        corner[i].set(corner[i].get_x() + rate * (corner[i].get_x() - corner[i+1].get_x()), corner[i].get_y() + rate * (corner[i+1].get_y()-corner[i].get_y()));
     }
 
     //Update the last point
-    corner[n-1].set(corner[n-1].get_x+rate*(tmp_x - corner[n-1].get_x),corner[n-1].get_y+rate*(tmp_y - corner[n-1].get_y));
+    corner[n-1].set(corner[n-1].get_x()+rate*(tmp_x - corner[n-1].get_x()),corner[n-1].get_y()+rate*(tmp_y - corner[n-1].get_y()));
 }
 
 void polygon::plot()
@@ -131,6 +131,6 @@ void polygon::plot()
     //traverse the corner location and plot each side
     for (int i = 0; i < n; i++)
     {
-        drawLine(corner[i].get_x, corner[i].get_y, corner[i%n].get_x, corner[i%n].get_y);
+        drawLine(corner[i].get_x(), corner[i].get_y(), corner[i%n].get_x(), corner[i%n].get_y(), GREEN);
     }
 }
