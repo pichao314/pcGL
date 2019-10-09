@@ -13,5 +13,6 @@ pcGL.cpp:134:6:void drawLine(int16_t, int16_t, int16_t, int16_t, uint32_t)	40	st
 pcGL.cpp:182:9:int16_t v2px(float)	24	static
 pcGL.cpp:187:9:int16_t v2py(float)	24	static
 pcGL.cpp:192:6:void drawLine(float, float, float, float, uint32_t)	48	static
-pcGL.cpp:195:1:void __static_initialization_and_destruction_0(int, int)	16	static
-pcGL.cpp:195:1:cpp)	8	static
+pcGL.cpp:197:6:void init()	32	static
+pcGL.cpp:210:1:void __static_initialization_and_destruction_0(int, int)	16	static
+pcGL.cpp:210:1:cpp)	8	static

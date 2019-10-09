@@ -1,11 +1,6 @@
 #ifndef H_2DUTIL
 #define H_2DUTIL
 
-#include <cstdlib>
-#include <iostream>
-#include <string>
-#include <vector>
-#include <cmath>
 #include "pcGL.h"
 
 using namespace std;

@@ -15,7 +15,12 @@
 #include <NXP/crp.h>
 #include "LPC17xx.h"  
 #include "ssp.h"
+#include <cstdlib>
 #include <iostream>
+#include <string>
+#include <vector>
+#include <cmath>
+#include <time.h>
 
 using namespace std;
 /* Be careful with the port number and location number, because
@@ -77,5 +82,7 @@ int16_t v2px(float x);
 int16_t v2py(float y);
 
 void drawLine(float x0, float y0, float x1, float y1, uint32_t color);
+
+void init();
 
 #endif // !H_PCGL

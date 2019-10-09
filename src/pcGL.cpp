@@ -193,3 +193,18 @@ void drawLine(float x0 = 0, float y0 = 0, float x1 = 0, float y1 = 0, uint32_t c
 {
     drawLine(v2px(x0), v2py(y0), v2px(x1), v2py(y1), color);
 }
+
+void init()
+{
+    uint32_t pnum = PORT_NUM, width = ST7735_TFTWIDTH / 5, len;
+	pnum = 1 ;
+
+	srand(time(NULL));
+
+	if ( pnum == 1 )
+		SSP1Init();
+	else
+		puts("Port number is not correct");
+	lcd_init();
+    fillrect(0, 0, ST7735_TFTWIDTH, ST7735_TFTHEIGHT, BLACK);
+}
