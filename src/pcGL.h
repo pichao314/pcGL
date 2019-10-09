@@ -24,8 +24,8 @@ some of the location may not exist in that port. */
 
 #define PORT_NUM          1
 
-uint8_t src_addr[SSP_BUFSIZE];
-uint8_t dest_addr[SSP_BUFSIZE];
+//uint8_t src_addr[SSP_BUFSIZE];
+//uint8_t dest_addr[SSP_BUFSIZE];
 
 #define ST7735_TFTWIDTH   127
 #define ST7735_TFTHEIGHT  159

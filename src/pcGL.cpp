@@ -4,6 +4,9 @@
 int _height = ST7735_TFTHEIGHT;
 int _width  = ST7735_TFTWIDTH;
 
+uint8_t src_addr[SSP_BUFSIZE];
+uint8_t dest_addr[SSP_BUFSIZE];
+
 void spiwrite(uint8_t c)
 {
     int pnum = 0;
