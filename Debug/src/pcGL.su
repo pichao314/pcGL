@@ -5,54 +5,55 @@ new:168:14:void* operator new(std::size_t, void*)	16	static
 gthr-default.h:229:1:int __gthread_key_delete(__gthread_key_t)	16	static
 stl_list.h:109:7:std::__detail::_List_node_header::_List_node_header()	16	static
 stl_list.h:149:7:void std::__detail::_List_node_header::_M_init()	16	static
-pcGL.cpp:73:6:void spiwrite(uint8_t)	24	static
-pcGL.cpp:91:6:void writecommand(uint8_t)	16	static
-pcGL.cpp:103:6:void writedata(uint8_t)	16	static
-pcGL.cpp:115:6:void writeword(uint16_t)	24	static
-pcGL.cpp:133:6:void write888(uint32_t, uint32_t)	24	static
-pcGL.cpp:161:6:void setAddrWindow(uint16_t, uint16_t, uint16_t, uint16_t)	24	static
-pcGL.cpp:180:6:void fillrect(int16_t, int16_t, int16_t, int16_t, uint32_t)	32	static
-pcGL.cpp:202:6:void lcddelay(int)	24	static
-pcGL.cpp:216:6:void lcd_init()	16	static
-pcGL.cpp:261:6:void drawPixel(int16_t, int16_t, uint32_t)	16	static
-pcGL.cpp:295:6:void drawLine(int16_t, int16_t, int16_t, int16_t, uint32_t)	40	static
-pcGL.cpp:370:9:int16_t v2px(float)	32	static
-pcGL.cpp:378:9:int16_t v2py(float)	32	static
-pcGL.cpp:386:7:float p2vx(int16_t)	32	static
-pcGL.cpp:392:7:float p2vy(int16_t)	32	static
-pcGL.cpp:398:6:void drawFLine(float, float, float, float, uint32_t)	48	static
-pcGL.cpp:444:6:void p2t::out()	16	static
-pcGL.cpp:449:1:p2t::p2t(float, float, uint32_t)	32	static
-pcGL.cpp:459:1:p2t::p2t(const p2t&)	16	static
-pcGL.cpp:467:6:void p2t::set(float, float, uint32_t)	32	static
-pcGL.cpp:476:7:float p2t::get_x() const	16	static
-pcGL.cpp:480:7:float p2t::get_y() const	16	static
-pcGL.cpp:485:10:uint32_t p2t::get_color() const	16	static
-pcGL.cpp:490:7:float p2t::get_r() const	16	static
-pcGL.cpp:496:5:p2t p2t::rotate(float, p2t)	48	static
-pcGL.cpp:514:1:p2t::~p2t()	16	static
-pcGL.cpp:560:6:void polygon::out()	24	static
-pcGL.cpp:568:1:polygon::polygon(std::vector<p2t>, uint32_t)	40	static
-pcGL.cpp:578:1:polygon::polygon(const polygon&)	32	static
-pcGL.cpp:583:1:polygon::~polygon()	16	static
-pcGL.cpp:588:6:void polygon::set(std::vector<p2t>, uint32_t)	56	static
-pcGL.cpp:593:13:std::vector<p2t> polygon::get() const	16	static
-pcGL.cpp:598:6:void polygon::shrink(float)	48	static
-pcGL.cpp:617:6:void polygon::plot()	48	static
-pcGL.cpp:649:1:p3t::p3t(float, float, float)	24	static
-pcGL.cpp:656:7:float p3t::get_x()	16	static
-pcGL.cpp:661:7:float p3t::get_y()	16	static
-pcGL.cpp:666:7:float p3t::get_z()	16	static
-pcGL.cpp:671:1:p3t::~p3t()	16	static
-pcGL.cpp:686:6:void rotateSquare()	232	static
+pcGL.cpp:75:6:void spiwrite(uint8_t)	24	static
+pcGL.cpp:93:6:void writecommand(uint8_t)	16	static
+pcGL.cpp:105:6:void writedata(uint8_t)	16	static
+pcGL.cpp:117:6:void writeword(uint16_t)	24	static
+pcGL.cpp:135:6:void write888(uint32_t, uint32_t)	24	static
+pcGL.cpp:163:6:void setAddrWindow(uint16_t, uint16_t, uint16_t, uint16_t)	24	static
+pcGL.cpp:182:6:void fillrect(int16_t, int16_t, int16_t, int16_t, uint32_t)	32	static
+pcGL.cpp:204:6:void lcddelay(int)	24	static
+pcGL.cpp:218:6:void lcd_init()	16	static
+pcGL.cpp:263:6:void drawPixel(int16_t, int16_t, uint32_t)	16	static
+pcGL.cpp:297:6:void drawLine(int16_t, int16_t, int16_t, int16_t, uint32_t)	40	static
+pcGL.cpp:372:9:int16_t v2px(float)	32	static
+pcGL.cpp:380:9:int16_t v2py(float)	32	static
+pcGL.cpp:388:7:float p2vx(int16_t)	32	static
+pcGL.cpp:394:7:float p2vy(int16_t)	32	static
+pcGL.cpp:400:6:void drawFLine(float, float, float, float, uint32_t)	48	static
+pcGL.cpp:449:6:void p2t::out()	16	static
+pcGL.cpp:454:1:p2t::p2t(float, float, uint32_t)	32	static
+pcGL.cpp:464:1:p2t::p2t(const p2t&)	16	static
+pcGL.cpp:472:6:void p2t::set(float, float, uint32_t)	32	static
+pcGL.cpp:481:7:float p2t::get_x() const	16	static
+pcGL.cpp:485:7:float p2t::get_y() const	16	static
+pcGL.cpp:490:10:uint32_t p2t::get_color() const	16	static
+pcGL.cpp:495:7:float p2t::get_r() const	16	static
+pcGL.cpp:501:5:p2t p2t::rotate(float, p2t)	48	static
+pcGL.cpp:519:5:p2t p2t::shift(float, float)	32	static
+pcGL.cpp:525:1:p2t::~p2t()	16	static
+pcGL.cpp:571:6:void polygon::out()	24	static
+pcGL.cpp:579:1:polygon::polygon(std::vector<p2t>, uint32_t)	40	static
+pcGL.cpp:589:1:polygon::polygon(const polygon&)	32	static
+pcGL.cpp:594:1:polygon::~polygon()	16	static
+pcGL.cpp:599:6:void polygon::set(std::vector<p2t>, uint32_t)	56	static
+pcGL.cpp:604:13:std::vector<p2t> polygon::get() const	16	static
+pcGL.cpp:609:6:void polygon::shrink(float)	48	static
+pcGL.cpp:628:6:void polygon::plot()	48	static
+pcGL.cpp:660:1:p3t::p3t(float, float, float)	24	static
+pcGL.cpp:667:7:float p3t::get_x()	16	static
+pcGL.cpp:672:7:float p3t::get_y()	16	static
+pcGL.cpp:677:7:float p3t::get_z()	16	static
+pcGL.cpp:682:1:p3t::~p3t()	16	static
+pcGL.cpp:697:6:void rotateSquare()	280	static
 cmath:415:5:constexpr typename __gnu_cxx::__promote_2<_Tp, _Up>::__type std::pow(_Tp, _Up) [with _Tp = int; _Up = int]	24	static
 stl_list.h:835:7:std::__cxx11::list<_Tp, _Alloc>::~list() [with _Tp = p2t; _Alloc = std::allocator<p2t>]	16	static
-pcGL.cpp:705:6:void drawTree(float, float, int)	272	static
-pcGL.cpp:765:5:p2t world2viewer_coord(int, int, int)	120	static
-pcGL.cpp:787:6:void draw3D()	128	static
-pcGL.cpp:802:7:float getLambda(p3t, p3t, p3t, p3t)	72	static
-pcGL.cpp:810:6:void drawShadow()	368	static
-pcGL.cpp:851:5:int main()	24	static
+pcGL.cpp:743:6:void drawTree(float, float, int)	272	static
+pcGL.cpp:803:5:p2t world2viewer_coord(int, int, int)	120	static
+pcGL.cpp:825:6:void draw3D()	128	static
+pcGL.cpp:840:7:float getLambda(p3t, p3t, p3t, p3t)	72	static
+pcGL.cpp:848:6:void drawShadow()	368	static
+pcGL.cpp:889:5:int main()	24	static
 stl_vector.h:805:7:std::vector<_Tp, _Alloc>::size_type std::vector<_Tp, _Alloc>::size() const [with _Tp = p2t; _Alloc = std::allocator<p2t>]	16	static
 stl_vector.h:930:7:std::vector<_Tp, _Alloc>::reference std::vector<_Tp, _Alloc>::operator[](std::vector<_Tp, _Alloc>::size_type) [with _Tp = p2t; _Alloc = std::allocator<p2t>]	16	static
 stl_vector.h:391:7:std::vector<_Tp, _Alloc>::vector() [with _Tp = p2t; _Alloc = std::allocator<p2t>]	16	static
@@ -221,5 +222,5 @@ new_allocator.h:129:7:__gnu_cxx::new_allocator<_Tp>::size_type __gnu_cxx::new_al
 move.h:74:5:constexpr _Tp&& std::forward(typename std::remove_reference<_Tp>::type&) [with _Tp = const p3t&]	16	static
 stl_construct.h:74:5:) [with _T1 = p3t; _Args = {const p3t&}]	24	static
 new_allocator.h:129:7:__gnu_cxx::new_allocator<_Tp>::size_type __gnu_cxx::new_allocator<_Tp>::max_size() const [with _Tp = std::_List_node<p2t>]	16	static
-pcGL.cpp:875:1:void __static_initialization_and_destruction_0(int, int)	16	static
-pcGL.cpp:875:1:cpp)	8	static
+pcGL.cpp:913:1:void __static_initialization_and_destruction_0(int, int)	16	static
+pcGL.cpp:913:1:cpp)	8	static

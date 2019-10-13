@@ -63,6 +63,8 @@ uint8_t dest_addr[SSP_BUFSIZE];
 #define MAGENTA 0x00F81F
 #define WHITE 0xFFFFFF
 #define PURPLE 0xCC33FF
+#define YELLOW 0xFFFF00
+#define PINK 0xFFC0CB
 
 #define PI 3.1415926
 
@@ -435,6 +437,9 @@ public:
     //Rotate the point with respect to angle and center and return as a new point
     p2t rotate(float angle, p2t center);
 
+    //Return a shifted new point
+    p2t shift(float x, float y);
+
     void out();
 
     //Destructor
@@ -508,6 +513,12 @@ p2t p2t::rotate(float angle, p2t center)
 
     //Build a new p2t with rotated location
     p2t point( dx*c - dy*s + center.get_x(), dx*s + dy*c + center.get_y(),_color);
+    return point;
+}
+
+p2t p2t::shift(float x, float y)
+{
+    p2t point(_x+x, _y+y, _color);
     return point;
 }
 
@@ -685,21 +696,48 @@ Lab and assignment
 
 void rotateSquare()
 {
-    uint32_t color[] = {LIGHTBLUE, GREEN, DARKBLUE, BLUE, RED, MAGENTA, WHITE, PURPLE};
+    uint32_t color[] = {LIGHTBLUE, GREEN, DARKBLUE, BLACK, BLUE, RED, MAGENTA, WHITE, PURPLE,YELLOW,PINK};
+    /*
     p2t p1(-0.5,-0.5, BLACK);
     p2t p2(0.5,-0.5, BLACK);
     p2t p3(0.5,0.5, BLACK);
     p2t p4(-0.5,0.5, BLACK);
     vector<p2t> square = {p1,p2,p3,p4};
-
     polygon sq(square, GREEN);
+    */
 
-    for (int i = 0; i < 8; i++)
+    float rate;
+    cout << "Please input the rate(input 0 would be set to default rate 0.8):";
+    cin >> rate;
+    if (rate == 0)
     {
-        sq.plot();
-        sq.shrink(0.2);
+        rate = 0.8;
     }
-   
+    srand(time(NULL));
+
+    for (int i = 0; i < 100; i++)
+    {
+        //random location
+        p2t ori(p2vx(rand()%_width),p2vy(rand()%_height),RED);
+        //random size
+        float size;
+        size = p2vx(rand()%_width)/2.0;
+        //random color
+        int clr;
+        clr = rand()%11;
+        //Generate square vector
+        p2t p1(ori.shift(-size,size));
+        p2t p2(ori.shift(-size, -size));
+        p2t p3(ori.shift(size, -size));
+        p2t p4(ori.shift(size, size));
+        vector<p2t> square = {p1,p2,p3,p4};
+        polygon sq(square, color[clr]);
+        for (int i = 0; i < 11; i++)
+        {
+            sq.plot();
+            sq.shrink(rate);
+        }
+    }
 }
 
 void drawTree(float _rate, float _angle, int level)
@@ -867,9 +905,9 @@ int main (void)
 	fillrect(0, 0, ST7735_TFTWIDTH, ST7735_TFTHEIGHT, BLACK);
 
     //drawTree(0.7,35,10);
-    draw3D();
-    drawShadow();
-
+    //draw3D();
+    //drawShadow();
+    rotateSquare();
 	return 0;
 
 }
