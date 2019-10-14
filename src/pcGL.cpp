@@ -940,9 +940,9 @@ void drawTree(p2t start, p2t stop, float rate, float angle, int level)
             p2t start = tree[j];
             
             //traverse the stop point for each start point in current branch
-            for (int k = 0; k < 1; k++)
+            for (int k = 0; k < 2; k++)
             {
-                
+                p2t stop = tree[]
             }
         }
 
@@ -1016,7 +1016,6 @@ void testTree()
 {
     p2t start(0,-1);
     p2t stop(0,-0.5);
-    drawTrunk(start, stop);
     //drawTree(start, stop, 0.8,30,10);
 }
 
