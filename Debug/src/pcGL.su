@@ -49,13 +49,13 @@ pcGL.cpp:758:6:void draw3D()	128	static
 pcGL.cpp:781:7:float getLambda(p3t, p3t, p3t, p3t)	72	static
 pcGL.cpp:789:6:void drawShadow()	368	static
 pcGL.cpp:841:6:void rotateSquare()	280	static
-pcGL.cpp:897:6:void drawTrunk(p2t, p2t)	48	static
-pcGL.cpp:926:6:void drawTree(p2t, p2t, float, float, int)	120	static
-pcGL.cpp:981:6:void recTree(p2t, p2t, float, float, int)	200	static
-pcGL.cpp:996:6:void testTree()	72	static
-pcGL.cpp:1004:6:void testRec()	80	static
-pcGL.cpp:1013:6:void drawForest(int)	112	static
-pcGL.cpp:1047:5:int main()	24	static
+pcGL.cpp:899:6:void drawTrunk(p2t, p2t)	48	static
+pcGL.cpp:928:6:void drawTree(p2t, p2t, float, float, int)	160	static
+pcGL.cpp:1000:6:void recTree(p2t, p2t, float, float, int)	200	static
+pcGL.cpp:1015:6:void testTree()	72	static
+pcGL.cpp:1023:6:void testRec()	80	static
+pcGL.cpp:1032:6:void drawForest(int)	112	static
+pcGL.cpp:1066:5:int main()	24	static
 stl_vector.h:805:7:std::vector<_Tp, _Alloc>::size_type std::vector<_Tp, _Alloc>::size() const [with _Tp = p2t; _Alloc = std::allocator<p2t>]	16	static
 stl_vector.h:930:7:std::vector<_Tp, _Alloc>::reference std::vector<_Tp, _Alloc>::operator[](std::vector<_Tp, _Alloc>::size_type) [with _Tp = p2t; _Alloc = std::allocator<p2t>]	16	static
 stl_vector.h:391:7:std::vector<_Tp, _Alloc>::vector() [with _Tp = p2t; _Alloc = std::allocator<p2t>]	16	static
@@ -178,5 +178,5 @@ stl_iterator.h:848:7:const _Iterator& __gnu_cxx::__normal_iterator<_Iterator, _C
 new_allocator.h:129:7:__gnu_cxx::new_allocator<_Tp>::size_type __gnu_cxx::new_allocator<_Tp>::max_size() const [with _Tp = p3t]	16	static
 move.h:74:5:constexpr _Tp&& std::forward(typename std::remove_reference<_Tp>::type&) [with _Tp = const p3t&]	16	static
 stl_construct.h:74:5:) [with _T1 = p3t; _Args = {const p3t&}]	24	static
-pcGL.cpp:1072:1:void __static_initialization_and_destruction_0(int, int)	16	static
-pcGL.cpp:1072:1:cpp)	8	static
+pcGL.cpp:1091:1:void __static_initialization_and_destruction_0(int, int)	16	static
+pcGL.cpp:1091:1:cpp)	8	static

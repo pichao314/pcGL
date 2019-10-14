@@ -894,6 +894,8 @@ Lab 1 Foreset
 
 */
 
+
+//draw the initial trunk with brown
 void drawTrunk(p2t start, p2t stop)
 {
     float len = stop.get_y() - start.get_y();
@@ -904,7 +906,7 @@ void drawTrunk(p2t start, p2t stop)
     int16_t x1 = v2px(stop.get_x() + wid);
     int16_t y1 = v2py(stop.get_y());
 
-    cout << "Now printing "<< x0 <<','<<y0<<" to "<<x1<<','<<y1<<endl;
+    //cout << "Now printing "<< x0 <<','<<y0<<" to "<<x1<<','<<y1<<endl;
     if (x1 < x0)
     {
         swap(x0,x1);
@@ -928,6 +930,23 @@ void drawTree(p2t start, p2t stop, float rate, float angle, int level)
     drawTrunk(start, stop);
     
     vector<p2t> tree = {start, stop};
+
+    //draw branches for each level
+    for (int i = 0; i < level; i++)
+    {
+        //traverse the start point for each branch in current level
+        for (int j = pow(2,i); j < pow(2,i+1); j++ )
+        {
+            p2t start = tree[j];
+            
+            //traverse the stop point for each start point in current branch
+            for (int k = 0; k < 1; k++)
+            {
+                
+            }
+        }
+
+    }
 /*
     for (int i = 0; i < level; i++)
     {
