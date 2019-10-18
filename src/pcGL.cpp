@@ -925,6 +925,7 @@ void drawTrunk(p2t start, p2t stop)
 }
 
 //Function to draw tree
+
 void drawTree(p2t start, p2t stop, float rate, float angle, int level)
 {
     drawTrunk(start, stop);
@@ -942,7 +943,7 @@ void drawTree(p2t start, p2t stop, float rate, float angle, int level)
             //traverse the stop point for each start point in current branch
             for (int k = 0; k < 2; k++)
             {
-                p2t stop = tree[]
+                //p2t stop = tree[]
             }
         }
 
@@ -1081,10 +1082,10 @@ int main (void)
 	fillrect(0, 0, ST7735_TFTWIDTH, ST7735_TFTHEIGHT, BLACK);
 
     //testRec();
-    testTree();
+    //testTree();
     //draw3D();
     //drawShadow();
-    //rotateSquare();
+    rotateSquare();
 	return 0;
 
 }

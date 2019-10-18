@@ -50,9 +50,9 @@ pcGL.cpp:781:7:float getLambda(p3t, p3t, p3t, p3t)	72	static
 pcGL.cpp:789:6:void drawShadow()	368	static
 pcGL.cpp:841:6:void rotateSquare()	280	static
 pcGL.cpp:899:6:void drawTrunk(p2t, p2t)	48	static
-pcGL.cpp:928:6:void drawTree(p2t, p2t, float, float, int)	160	static
-pcGL.cpp:1000:6:void recTree(p2t, p2t, float, float, int)	200	static
-pcGL.cpp:1015:6:void testTree()	72	static
+pcGL.cpp:929:6:void drawTree(p2t, p2t, float, float, int)	160	static
+pcGL.cpp:1001:6:void recTree(p2t, p2t, float, float, int)	200	static
+pcGL.cpp:1016:6:void testTree()	40	static
 pcGL.cpp:1023:6:void testRec()	80	static
 pcGL.cpp:1032:6:void drawForest(int)	112	static
 pcGL.cpp:1066:5:int main()	24	static
