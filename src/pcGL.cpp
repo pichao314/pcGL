@@ -65,6 +65,7 @@ uint8_t dest_addr[SSP_BUFSIZE];
 #define PURPLE 0xCC33FF
 #define YELLOW 0xFFFF00
 #define PINK 0xFFC0CB
+#define BROWN 0xA52A2A
 
 #define PI 3.1415926
 
@@ -368,6 +369,14 @@ void drawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint32_t color)
 
 }
 
+/*
+===============================================================================
+
+The virtual - physical transform function
+
+===============================================================================
+*/
+
 
 int16_t v2px(float x)
 {
@@ -420,18 +429,17 @@ private:
 
 public:
     // Constructor
-    p2t(float x, float y, uint32_t color);
+    p2t(float x, float y);
 
     //Copy constructor
     p2t(const p2t& other);
 
     //Setter
-    void set(float x, float y, uint32_t color);
+    void set(float x, float y);
 
     //Getter
     float get_x() const;
     float get_y() const;
-    uint32_t get_color() const;
     float get_r() const;
 
     //Rotate the point with respect to angle and center and return as a new point
@@ -451,11 +459,10 @@ void p2t::out()
   cout << "( "<<_x<<" , "<<_y<<" )";
 }
 
-p2t::p2t(float x, float y, uint32_t color)
+p2t::p2t(float x, float y)
 {
     _x = x;
     _y = y;
-    _color = color;
 
     //The distance is calculated when the constructor called
     rho = sqrt(x*x + y*y);
@@ -465,17 +472,15 @@ p2t::p2t(const p2t& pt)
 {
     _x = pt.get_x();
     _y = pt.get_y();
-    _color = pt.get_color();
     rho = pt.get_r();
 }
 
-void p2t::set(float x, float y, uint32_t color)
+void p2t::set(float x, float y)
 {
     //Values would be set if provided
     _x = x;
     _y = y;
     rho = sqrt(_x*_x + _y*_y);
-    _color = color;
 }
 
 float p2t::get_x() const
@@ -485,11 +490,6 @@ float p2t::get_x() const
 float p2t::get_y() const
 {
     return _y;
-}
-
-uint32_t p2t::get_color() const
-{
-    return _color;
 }
 
 float p2t::get_r() const
@@ -512,13 +512,13 @@ p2t p2t::rotate(float angle, p2t center)
     float dy = _y - center.get_y();
 
     //Build a new p2t with rotated location
-    p2t point( dx*c - dy*s + center.get_x(), dx*s + dy*c + center.get_y(),_color);
+    p2t point( dx*c - dy*s + center.get_x(), dx*s + dy*c + center.get_y());
     return point;
 }
 
 p2t p2t::shift(float x, float y)
 {
-    p2t point(_x+x, _y+y, _color);
+    p2t point(_x+x, _y+y);
     return point;
 }
 
@@ -526,6 +526,18 @@ p2t::~p2t()
 {
 
 }
+
+void drawFLine(p2t start, p2t stop, uint32_t color)
+{
+    float x0 = start.get_x();
+    float x1 = stop.get_x();
+    float y0 = start.get_y();
+    float y1 = stop.get_y();
+    
+    drawLine(v2px(x0), v2py(y0), v2px(x1), v2py(y1), color);
+}
+
+
 
 /*
 ===============================================================================
@@ -618,11 +630,11 @@ void polygon::shrink(float rate)
     //calculate the new location by new = new + rate * (new - old)
     for (int i = 0; i < n - 1; i++)
     {
-        corner[i].set(corner[i].get_x() + rate * (corner[i+1].get_x() - corner[i].get_x()), corner[i].get_y() + rate * (corner[i+1].get_y()-corner[i].get_y()), _color);
+        corner[i].set(corner[i].get_x() + rate * (corner[i+1].get_x() - corner[i].get_x()), corner[i].get_y() + rate * (corner[i+1].get_y()-corner[i].get_y()));
     }
 
     //Update the last point
-    corner[n-1].set(corner[n-1].get_x()+rate*(tmp_x - corner[n-1].get_x()),corner[n-1].get_y()+rate*(tmp_y - corner[n-1].get_y()),_color);
+    corner[n-1].set(corner[n-1].get_x()+rate*(tmp_x - corner[n-1].get_x()),corner[n-1].get_y()+rate*(tmp_y - corner[n-1].get_y()));
 }
 
 void polygon::plot()
@@ -685,102 +697,13 @@ p3t::~p3t()
 
 
 /*
-
 ===============================================================================
 
-Lab and assignment
+The world to viewer transform
 
 ===============================================================================
-
 */
 
-void rotateSquare()
-{
-    uint32_t color[] = {LIGHTBLUE, GREEN, DARKBLUE, BLACK, BLUE, RED, MAGENTA, WHITE, PURPLE,YELLOW,PINK};
-    /*
-    p2t p1(-0.5,-0.5, BLACK);
-    p2t p2(0.5,-0.5, BLACK);
-    p2t p3(0.5,0.5, BLACK);
-    p2t p4(-0.5,0.5, BLACK);
-    vector<p2t> square = {p1,p2,p3,p4};
-    polygon sq(square, GREEN);
-    */
-
-    float rate;
-    cout << "Please input the rate(input 0 would be set to default rate 0.8):";
-    cin >> rate;
-    if (rate == 0)
-    {
-        rate = 0.8;
-    }
-    srand(time(NULL));
-
-    for (int i = 0; i < 100; i++)
-    {
-        //random location
-        p2t ori(p2vx(rand()%_width),p2vy(rand()%_height),RED);
-        //random size
-        float size;
-        size = p2vx(rand()%_width)/2.0;
-        //random color
-        int clr;
-        clr = rand()%11;
-        //Generate square vector
-        p2t p1(ori.shift(-size,size));
-        p2t p2(ori.shift(-size, -size));
-        p2t p3(ori.shift(size, -size));
-        p2t p4(ori.shift(size, size));
-        vector<p2t> square = {p1,p2,p3,p4};
-        polygon sq(square, color[clr]);
-        for (int i = 0; i < 11; i++)
-        {
-            sq.plot();
-            sq.shrink(rate);
-        }
-    }
-}
-
-void drawTree(float _rate, float _angle, int level)
-{
-    float rate = _rate;
-    float angle = _angle;
-    int limit = pow(3,level)/2;
-    p2t start(0,-1,GREEN);
-    p2t stop(0,-0.5,GREEN);
-    list<p2t> tree = {start, stop};
-    for (int i = 0; i < limit; i ++)
-    {
-        //cout << "This is no " << i << "branch\n-----------------------------\n";
-        p2t start = tree.front();
-        tree.pop_front();
-        //cout << "The start is ";
-        //start.out();
-        p2t stop = tree.front();
-        tree.pop_front();
-        //cout << "The stop is ";
-        //stop.out();
-        drawFLine(start.get_x(), start.get_y(), stop.get_x(), stop.get_y(), GREEN);
-        float a = stop.get_x() + rate * (stop.get_x() - start.get_x());
-        float b = stop.get_y() + rate * (stop.get_y() - start.get_y());
-        //cout << "a,b is " << a << ' ' << b << endl;
-        p2t mid(a,b, GREEN);
-        //cout << "The mid is ";
-        //mid.out();
-        tree.push_back(stop);
-        tree.push_back(mid);
-        p2t left = mid.rotate(angle,stop);
-        //cout << "The left is ";
-        //left.out();
-        tree.push_back(stop);
-        tree.push_back(left);        
-        p2t right = mid.rotate(360-angle, stop);
-        //cout << "The right is ";
-        //right.out();
-        tree.push_back(stop);
-        tree.push_back(right);
-        //cout << endl;
-    }
-}
 
 int cursor_x = 0, cursor_y = 0;
 int rotation = 0;
@@ -800,6 +723,7 @@ int light_z = 60;
 int colstart = 0;
 int rowstart = 0;
 
+
 p2t world2viewer_coord(int x_w, int y_w, int z_w)
 {
     int scrn_x, scrn_y, Dist=100,x_diff=ST7735_TFTWIDTH/2,y_diff=ST7735_TFTHEIGHT/2;
@@ -818,9 +742,18 @@ p2t world2viewer_coord(int x_w, int y_w, int z_w)
     float nx = p2vx(scrn_x);
     float ny = p2vy(scrn_y);
 
-    p2t screen(nx,ny,RED);
+    p2t screen(nx,ny);
     return screen;
 }
+
+
+/*
+===============================================================================
+
+Draw 3D coordinate
+
+===============================================================================
+*/
 
 void draw3D()
 {
@@ -836,6 +769,14 @@ void draw3D()
         drawFLine(cords[0].get_x(),cords[0].get_y(), cords[i].get_x(), cords[i].get_y(), colors[i-1]);
     }
 }
+
+/*
+===============================================================================
+
+Draw shadow
+
+===============================================================================
+*/
 
 float getLambda(p3t light, p3t point, p3t arbi, p3t norm)
 {
@@ -886,6 +827,241 @@ void drawShadow()
     }
 }
 
+
+/*
+
+===============================================================================
+
+Homework 1
+
+===============================================================================
+
+*/
+
+void rotateSquare()
+{
+    uint32_t color[] = {LIGHTBLUE, GREEN, DARKBLUE, BLACK, BLUE, RED, MAGENTA, WHITE, PURPLE,YELLOW,PINK, BROWN};
+    /*
+    p2t p1(-0.5,-0.5);
+    p2t p2(0.5,-0.5);
+    p2t p3(0.5,0.5);
+    p2t p4(-0.5,0.5);
+    vector<p2t> square = {p1,p2,p3,p4};
+    polygon sq(square, GREEN);
+    */
+
+    float rate;
+    cout << "Please input the rate(input 0 would be set to default rate 0.8):";
+    cin >> rate;
+    if (rate == 0)
+    {
+        rate = 0.8;
+    }
+    srand(time(NULL));
+
+    for (int i = 0; i < 100; i++)
+    {
+        //random location
+        p2t ori(p2vx(rand()%_width),p2vy(rand()%_height));
+        //random size
+        float size;
+        size = p2vx(rand()%_width)/2.0;
+        //random color
+        int clr;
+        clr = rand()%12;
+        //Generate square vector
+        p2t p1(ori.shift(-size,size));
+        p2t p2(ori.shift(-size, -size));
+        p2t p3(ori.shift(size, -size));
+        p2t p4(ori.shift(size, size));
+        vector<p2t> square = {p1,p2,p3,p4};
+        polygon sq(square, color[clr]);
+        for (int i = 0; i < 11; i++)
+        {
+            sq.plot();
+            sq.shrink(rate);
+        }
+    }
+}
+
+/*
+
+===============================================================================
+
+Lab 1 Foreset
+
+===============================================================================
+
+*/
+
+
+//draw the initial trunk with brown
+void drawTrunk(p2t start, p2t stop)
+{
+    float len = stop.get_y() - start.get_y();
+    float wid = len / 5.0;
+
+    int16_t x0 = v2px(start.get_x() - wid);
+    int16_t y0 = v2py(start.get_y());
+    int16_t x1 = v2px(stop.get_x() + wid);
+    int16_t y1 = v2py(stop.get_y());
+
+    //cout << "Now printing "<< x0 <<','<<y0<<" to "<<x1<<','<<y1<<endl;
+    if (x1 < x0)
+    {
+        swap(x0,x1);
+    }
+    if (y1 < y0)
+    {
+        swap(y1,y0);
+    }
+    for (int i = x0; i <= x1; i++)
+    {
+        for (int j = y0; j <= y1; j++)
+        {
+            drawPixel(i,j,BROWN);
+        }
+    }
+}
+
+//Function to draw tree
+void drawTree(p2t start, p2t stop, float rate, float angle, int level)
+{
+    drawTrunk(start, stop);
+    
+    vector<p2t> tree = {start, stop};
+
+    //draw branches for each level
+    for (int i = 0; i < level; i++)
+    {
+        //traverse the start point for each branch in current level
+        for (int j = pow(2,i); j < pow(2,i+1); j++ )
+        {
+            p2t start = tree[j];
+            
+            //traverse the stop point for each start point in current branch
+            for (int k = 0; k < 2; k++)
+            {
+                p2t stop = tree[]
+            }
+        }
+
+    }
+/*
+    for (int i = 0; i < level; i++)
+    {
+        for (int j = 0; j < pow(2,i);j++)
+        {
+            drawFLine(tree[pow(2,i)],tree[0])
+        }
+    }*/
+
+    //int limit = pow(2,level)/2;
+    //list<p2t> tree = {start, stop};
+
+
+    /*
+    for (int i = 0; i < limit; i ++)
+    {
+        //cout << "This is no " << i << "branch\n-----------------------------\n";
+        p2t start = tree.front();
+        tree.pop_front();
+        //cout << "The start is ";
+        //start.out();
+        p2t stop = tree.front();
+        tree.pop_front();
+        //cout << "The stop is ";
+        //stop.out();
+        drawFLine(start.get_x(), start.get_y(), stop.get_x(), stop.get_y(), GREEN);
+        float a = stop.get_x() + rate * (stop.get_x() - start.get_x());
+        float b = stop.get_y() + rate * (stop.get_y() - start.get_y());
+        //cout << "a,b is " << a << ' ' << b << endl;
+        p2t mid(a,b);
+        //cout << "The mid is ";
+        //mid.out();
+        //tree.push_back(stop);
+        //tree.push_back(mid);
+        p2t left = mid.rotate(angle,stop);
+        //cout << "The left is ";
+        //left.out();
+        tree.push_back(stop);
+        tree.push_back(left);        
+        p2t right = mid.rotate(360-angle, stop);
+        //cout << "The right is ";
+        //right.out();
+        tree.push_back(stop);
+        tree.push_back(right);
+        //cout << endl;
+    }
+    */
+}
+
+//recursive version of drawTree
+void recTree(p2t start, p2t stop, float rate, float angle, int level)
+{
+    if (level == 0)
+        return;
+    drawFLine(start.get_x(), start.get_y(), stop.get_x(), stop.get_y(), GREEN);
+    float a = stop.get_x() + rate * (stop.get_x() - start.get_x());
+    float b = stop.get_y() + rate * (stop.get_y() - start.get_y());
+    p2t mid(a,b);
+    p2t left = mid.rotate(angle,stop);
+    p2t right = mid.rotate(360-angle, stop);
+    recTree(stop, left, rate, angle, level-1);
+    //recTree(stop, mid, rate, angle, level-1);
+    recTree(stop, right, rate, angle, level -1);
+}
+
+void testTree()
+{
+    p2t start(0,-1);
+    p2t stop(0,-0.5);
+    //drawTree(start, stop, 0.8,30,10);
+}
+
+void testRec()
+{
+    p2t start(0,-1);
+    p2t stop(0,-0.5);
+    recTree(start, stop, 0.8,30,10);   
+}
+
+//Function to generate forest with randomized location, reduction and angle
+
+void drawForest(int level)
+{
+    cout << "Input q to stop...."<<endl;
+    do
+    {
+        srand(time(NULL));
+        //random location
+        p2t start(p2vx(rand()%_width),p2vy(rand()%_height));
+
+        //random root length 
+        float len = p2vx(rand()%_height)/3.0;
+        p2t stop(start.shift(0,len));
+
+        //random angle
+        float angle = rand()%60+30.0;
+
+        //random reduction
+        float rate = rand()%10/10.0;
+        drawTree(start,stop, rate,angle,level);
+
+    } while (cin.get() != 'q');
+    cout << "Stopped!!"<<endl;
+}
+
+/*
+
+===============================================================================
+
+Main Function
+
+===============================================================================
+
+*/
+
 int main (void)
 
 {
@@ -904,10 +1080,11 @@ int main (void)
 
 	fillrect(0, 0, ST7735_TFTWIDTH, ST7735_TFTHEIGHT, BLACK);
 
-    //drawTree(0.7,35,10);
+    //testRec();
+    testTree();
     //draw3D();
     //drawShadow();
-    rotateSquare();
+    //rotateSquare();
 	return 0;
 
 }
