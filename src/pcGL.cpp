@@ -907,9 +907,9 @@ void testBranch()
 }
 
 //Function to generate forest with randomized location, reduction and angle
-void drawForest(int num, int level)
-{ 
-    for (int i = 0; i < num; i++)
+void drawForest(int nums, int level)
+{
+    for(int i = 0; i < nums; i++)
     {
         srand(time(NULL));
         //random location
@@ -931,47 +931,32 @@ void drawForest(int num, int level)
         float rate = rand()%10/20.0+0.3;
         drawTree(start,stop, rate,angle,level);
     }
-    cout << "Stopped!!"<<endl;
 }
 
 
 /*
-
 ===============================================================================
-
 Main Function
-
 ===============================================================================
-
 */
 
-
 int main (void)
-
 {
-
 	uint32_t pnum = PORT_NUM;
-
 	pnum = 0 ;
 
 	if ( pnum == 0 )
 		SSP0Init();
-
 	else
 		puts("Port number is not correct");
-
 	lcd_init();
-
 	fillrect(0, 0, ST7735_TFTWIDTH, ST7735_TFTHEIGHT, BLACK);
-
     //rotateSquare();
     //testBranch();
     //testTree();
-    drawForest(10,5);
+    drawForest(20,5);
     //draw3D();
     //drawShadow();
-
 	return 0;
-
 }
 
