@@ -281,20 +281,12 @@ void drawPixel(int16_t x, int16_t y, uint32_t color)
 
 /*****************************************************************************
 
-
-** Descriptions:        Draw line function
-
-**
-
-** parameters:           Starting point (x0,y0), Ending point(x1,y1) and color
-
-** Returned value:        None
-
-**
-
+* Descriptions:        Draw line function
+*
+* parameters:           Starting point (x0,y0), Ending point(x1,y1) and color
+* Returned value:        None
+*
 *****************************************************************************/
-
-
 void drawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint32_t color)
 
 {
@@ -538,7 +530,6 @@ void drawFLine(p2t start, p2t stop, uint32_t color)
 }
 
 
-
 /*
 ===============================================================================
 
@@ -694,6 +685,9 @@ float p3t::get_z()
 p3t::~p3t()
 {
 }
+
+
+
 
 
 /*
@@ -924,77 +918,117 @@ void drawTrunk(p2t start, p2t stop)
     }
 }
 
+//A branch class
+
+//-----------------------------------------------------------------------------
+
+class branch
+{
+private:
+    vector<p2t> node;
+    uint32_t color;
+    float rate;
+    float angle;
+
+public:
+    branch();
+    branch(p2t start, p2t stop, float _rate, float _angle,  uint32_t _color);
+    branch(const branch &br);
+    void plot();
+    vector<p2t> get() const;
+    float get_r() const;
+    float get_a() const;
+    float get_c() const;
+    ~branch();
+};
+
+branch::branch(){
+    p2t start(0,-1);
+    p2t stop(0,-0.5);
+    branch(start, stop, 0.8, 30, GREEN);
+}
+
+branch::branch(p2t start, p2t stop, float _rate, float _angle,  uint32_t _color)
+{
+    rate = _rate;
+    angle = _angle;
+    color = _color;
+    float a = stop.get_x() + rate * (stop.get_x() - start.get_x());
+    float b = stop.get_y() + rate * (stop.get_y() - start.get_y());
+    p2t mid(a,b);
+    p2t left = mid.rotate(angle,stop);      
+    p2t right = mid.rotate(360-angle, stop);
+    node.push_back(stop);
+    node.push_back(mid);
+    node.push_back(left);
+    node.push_back(right);
+}
+
+void branch::plot()
+{
+    for (int i = 1; i < node.size(); i++)
+    {
+        drawFLine(node[0], node[i],color);
+    }
+}
+
+vector<p2t> branch::get() const{
+    return node;
+}
+
+float branch::get_r() const{
+    return rate;   
+}
+float branch::get_a() const{
+    return angle;
+}
+float branch::get_c() const{
+    return color;
+}
+
+branch::branch(const branch& br){
+    node = br.get();
+    rate = br.get_r();
+    angle = br.get_a();
+    color = br.get_c();
+}
+
+branch::~branch()
+{
+}
+
+//-----------------------------------------------------------------------------
+
 //Function to draw tree
 
 void drawTree(p2t start, p2t stop, float rate, float angle, int level)
 {
     drawTrunk(start, stop);
-    
-    vector<p2t> tree = {start, stop};
+    branch init(start,stop,rate,angle,GREEN);
+    //use list to store the branch
+    list<branch> tree = {init};
 
-    //draw branches for each level
-    for (int i = 0; i < level; i++)
+    //traverse the tree node with specified level
+    for (int i = 0; i < level; i ++)
     {
-        //traverse the start point for each branch in current level
-        for (int j = pow(2,i); j < pow(2,i+1); j++ )
+        //plot 3^i trees on i-th level
+        for (int j = 0; j < pow(3,i);j++)
         {
-            p2t start = tree[j];
-            
-            //traverse the stop point for each start point in current branch
-            for (int k = 0; k < 2; k++)
+            branch tmp(tree.front());
+            tree.pop_front();
+            tmp.plot();
+            vector<p2t> temp(tmp.get());
+            if (i != level -1)
             {
-                //p2t stop = tree[]
+                branch mid(temp[0],temp[1],rate,angle,GREEN);
+                branch left(temp[0],temp[2],rate, angle,GREEN);
+                branch right(temp[0],temp[3],rate, angle,GREEN);
+                tree.push_back(mid);
+                tree.push_back(left);
+                tree.push_back(right);
             }
         }
-
     }
-/*
-    for (int i = 0; i < level; i++)
-    {
-        for (int j = 0; j < pow(2,i);j++)
-        {
-            drawFLine(tree[pow(2,i)],tree[0])
-        }
-    }*/
-
-    //int limit = pow(2,level)/2;
-    //list<p2t> tree = {start, stop};
-
-
-    /*
-    for (int i = 0; i < limit; i ++)
-    {
-        //cout << "This is no " << i << "branch\n-----------------------------\n";
-        p2t start = tree.front();
-        tree.pop_front();
-        //cout << "The start is ";
-        //start.out();
-        p2t stop = tree.front();
-        tree.pop_front();
-        //cout << "The stop is ";
-        //stop.out();
-        drawFLine(start.get_x(), start.get_y(), stop.get_x(), stop.get_y(), GREEN);
-        float a = stop.get_x() + rate * (stop.get_x() - start.get_x());
-        float b = stop.get_y() + rate * (stop.get_y() - start.get_y());
-        //cout << "a,b is " << a << ' ' << b << endl;
-        p2t mid(a,b);
-        //cout << "The mid is ";
-        //mid.out();
-        //tree.push_back(stop);
-        //tree.push_back(mid);
-        p2t left = mid.rotate(angle,stop);
-        //cout << "The left is ";
-        //left.out();
-        tree.push_back(stop);
-        tree.push_back(left);        
-        p2t right = mid.rotate(360-angle, stop);
-        //cout << "The right is ";
-        //right.out();
-        tree.push_back(stop);
-        tree.push_back(right);
-        //cout << endl;
-    }
-    */
 }
 
 //recursive version of drawTree
@@ -1013,27 +1047,28 @@ void recTree(p2t start, p2t stop, float rate, float angle, int level)
     recTree(stop, right, rate, angle, level -1);
 }
 
-void testTree()
-{
-    p2t start(0,-1);
-    p2t stop(0,-0.5);
-    //drawTree(start, stop, 0.8,30,10);
-}
-
+//function to test tree
 void testRec()
 {
     p2t start(0,-1);
     p2t stop(0,-0.5);
-    recTree(start, stop, 0.8,30,10);   
+    drawTree(start, stop, 0.8,30,10);
+    //recTree(start, stop, 0.8,30,10);   
+}
+
+//function to test branch
+void testBranch()
+{
+    p2t start(0,-1);
+    p2t stop(0,-0.5);
+    drawTrunk(start, stop);
+    branch br(start,stop,0.8,30,GREEN);
+    br.plot();
 }
 
 //Function to generate forest with randomized location, reduction and angle
-
 void drawForest(int level)
-{
-    cout << "Input q to stop...."<<endl;
-    do
-    {
+{ 
         srand(time(NULL));
         //random location
         p2t start(p2vx(rand()%_width),p2vy(rand()%_height));
@@ -1046,10 +1081,9 @@ void drawForest(int level)
         float angle = rand()%60+30.0;
 
         //random reduction
-        float rate = rand()%10/10.0;
+        float rate = rand()%10/20.0+0.3;
         drawTree(start,stop, rate,angle,level);
 
-    } while (cin.get() != 'q');
     cout << "Stopped!!"<<endl;
 }
 
@@ -1083,9 +1117,10 @@ int main (void)
 
     //testRec();
     //testTree();
+    testBranch();
     //draw3D();
     //drawShadow();
-    rotateSquare();
+    //rotateSquare();
 	return 0;
 
 }
