@@ -1074,18 +1074,15 @@ void drawForest(int num, int level)
     {
         srand(time(NULL));
         //random location
-        float stx = p2vx(rand()%_width);
-        float sty = p2vy(rand()%(_height/2));
+        float stx = rand()%170/100.0-0.8;
+        float sty = rand()%10/10.0 - 1.0;
+        float len = rand()%25/100.0 + 0.25;
         p2t start(stx,sty);
         cout << " start:";
         start.out();
-
-        //random root length 
-        float len = p2vx(rand()%_height)/3.0;
         p2t stop(start.shift(0,len));
         cout << " stop:";
         stop.out();
-
         cout << endl;
 
         //random angle
@@ -1129,7 +1126,7 @@ int main (void)
     //rotateSquare();
     //testBranch();
     //testTree();
-    drawForest(5,5);
+    drawForest(10,5);
     //draw3D();
     //drawShadow();
 

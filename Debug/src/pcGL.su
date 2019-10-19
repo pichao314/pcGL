@@ -67,7 +67,7 @@ pcGL.cpp:1036:6:void recTree(p2t, p2t, float, float, int)	200	static
 pcGL.cpp:1052:6:void testTree()	80	static
 pcGL.cpp:1061:6:void testBranch()	136	static
 pcGL.cpp:1071:6:void drawForest(int, int)	120	static
-pcGL.cpp:1111:5:int main()	24	static
+pcGL.cpp:1108:5:int main()	24	static
 stl_vector.h:805:7:std::vector<_Tp, _Alloc>::size_type std::vector<_Tp, _Alloc>::size() const [with _Tp = p2t; _Alloc = std::allocator<p2t>]	16	static
 stl_vector.h:930:7:std::vector<_Tp, _Alloc>::reference std::vector<_Tp, _Alloc>::operator[](std::vector<_Tp, _Alloc>::size_type) [with _Tp = p2t; _Alloc = std::allocator<p2t>]	16	static
 stl_vector.h:391:7:std::vector<_Tp, _Alloc>::vector() [with _Tp = p2t; _Alloc = std::allocator<p2t>]	16	static
@@ -255,5 +255,5 @@ move.h:74:5:constexpr _Tp&& std::forward(typename std::remove_reference<_Tp>::ty
 stl_construct.h:74:5:) [with _T1 = p3t; _Args = {const p3t&}]	24	static
 new_allocator.h:99:7:_Tp* __gnu_cxx::new_allocator<_Tp>::allocate(__gnu_cxx::new_allocator<_Tp>::size_type, const void*) [with _Tp = std::_List_node<branch>]	24	static
 new_allocator.h:129:7:__gnu_cxx::new_allocator<_Tp>::size_type __gnu_cxx::new_allocator<_Tp>::max_size() const [with _Tp = std::_List_node<branch>]	16	static
-pcGL.cpp:1138:1:void __static_initialization_and_destruction_0(int, int)	16	static
-pcGL.cpp:1138:1:cpp)	8	static
+pcGL.cpp:1135:1:void __static_initialization_and_destruction_0(int, int)	16	static
+pcGL.cpp:1135:1:cpp)	8	static
