@@ -1068,15 +1068,25 @@ void testBranch()
 }
 
 //Function to generate forest with randomized location, reduction and angle
-void drawForest(int level)
+void drawForest(int num, int level)
 { 
+    for (int i = 0; i < num; i++)
+    {
         srand(time(NULL));
         //random location
-        p2t start(p2vx(rand()%_width),p2vy(rand()%_height));
+        float stx = p2vx(rand()%_width);
+        float sty = p2vy(rand()%(_height/2));
+        p2t start(stx,sty);
+        cout << " start:";
+        start.out();
 
         //random root length 
         float len = p2vx(rand()%_height)/3.0;
         p2t stop(start.shift(0,len));
+        cout << " stop:";
+        stop.out();
+
+        cout << endl;
 
         //random angle
         float angle = rand()%60+30.0;
@@ -1084,7 +1094,7 @@ void drawForest(int level)
         //random reduction
         float rate = rand()%10/20.0+0.3;
         drawTree(start,stop, rate,angle,level);
-
+    }
     cout << "Stopped!!"<<endl;
 }
 
@@ -1116,11 +1126,13 @@ int main (void)
 
 	fillrect(0, 0, ST7735_TFTWIDTH, ST7735_TFTHEIGHT, BLACK);
 
-    testTree();
+    //rotateSquare();
     //testBranch();
+    //testTree();
+    drawForest(5,5);
     //draw3D();
     //drawShadow();
-    //rotateSquare();
+
 	return 0;
 
 }
