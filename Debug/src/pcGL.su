@@ -63,11 +63,11 @@ pcGL.cpp:989:1:branch::branch(const branch&)	40	static
 pcGL.cpp:996:1:branch::~branch()	16	static
 stl_list.h:835:7:std::__cxx11::list<_Tp, _Alloc>::~list() [with _Tp = branch; _Alloc = std::allocator<branch>]	16	static
 pcGL.cpp:1004:6:void drawTree(p2t, p2t, float, float, int)	400	static
-pcGL.cpp:1035:6:void recTree(p2t, p2t, float, float, int)	200	static
-pcGL.cpp:1051:6:void testRec()	80	static
-pcGL.cpp:1060:6:void testBranch()	136	static
-pcGL.cpp:1070:6:void drawForest(int)	112	static
-pcGL.cpp:1100:5:int main()	24	static
+pcGL.cpp:1036:6:void recTree(p2t, p2t, float, float, int)	200	static
+pcGL.cpp:1052:6:void testTree()	80	static
+pcGL.cpp:1061:6:void testBranch()	136	static
+pcGL.cpp:1071:6:void drawForest(int)	112	static
+pcGL.cpp:1101:5:int main()	24	static
 stl_vector.h:805:7:std::vector<_Tp, _Alloc>::size_type std::vector<_Tp, _Alloc>::size() const [with _Tp = p2t; _Alloc = std::allocator<p2t>]	16	static
 stl_vector.h:930:7:std::vector<_Tp, _Alloc>::reference std::vector<_Tp, _Alloc>::operator[](std::vector<_Tp, _Alloc>::size_type) [with _Tp = p2t; _Alloc = std::allocator<p2t>]	16	static
 stl_vector.h:391:7:std::vector<_Tp, _Alloc>::vector() [with _Tp = p2t; _Alloc = std::allocator<p2t>]	16	static

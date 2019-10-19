@@ -1012,6 +1012,7 @@ void drawTree(p2t start, p2t stop, float rate, float angle, int level)
     for (int i = 0; i < level; i ++)
     {
         //plot 3^i trees on i-th level
+        cout << "Now plotting the "<<i+1<<"th level"<<endl;
         for (int j = 0; j < pow(3,i);j++)
         {
             branch tmp(tree.front());
@@ -1048,11 +1049,11 @@ void recTree(p2t start, p2t stop, float rate, float angle, int level)
 }
 
 //function to test tree
-void testRec()
+void testTree()
 {
     p2t start(0,-1);
     p2t stop(0,-0.5);
-    drawTree(start, stop, 0.8,30,10);
+    drawTree(start, stop, 0.8,30,5);
     //recTree(start, stop, 0.8,30,10);   
 }
 
@@ -1115,9 +1116,8 @@ int main (void)
 
 	fillrect(0, 0, ST7735_TFTWIDTH, ST7735_TFTHEIGHT, BLACK);
 
-    //testRec();
-    //testTree();
-    testBranch();
+    testTree();
+    //testBranch();
     //draw3D();
     //drawShadow();
     //rotateSquare();
