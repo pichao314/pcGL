@@ -19,25 +19,25 @@ pcGL.cpp:142:6:void lcd_init()	16	static
 pcGL.cpp:172:6:void drawPixel(int16_t, int16_t, uint32_t)	16	static
 pcGL.cpp:188:6:void drawLine(int16_t, int16_t, int16_t, int16_t, uint32_t)	40	static
 pcGL.cpp:226:6:void trackLine(int16_t, int16_t, int16_t, int16_t, uint32_t, std::set<short int>&)	56	static
-pcGL.cpp:271:9:int16_t v2px(float)	32	static
-pcGL.cpp:279:9:int16_t v2py(float)	32	static
-pcGL.cpp:287:7:float p2vx(int16_t)	32	static
-pcGL.cpp:293:7:float p2vy(int16_t)	32	static
-pcGL.cpp:299:6:void drawFLine(float, float, float, float, uint32_t)	48	static
-pcGL.cpp:346:6:void p2t::out()	16	static
-pcGL.cpp:351:1:p2t::p2t(float, float)	32	static
-pcGL.cpp:360:1:p2t::p2t(const p2t&)	16	static
-pcGL.cpp:367:6:void p2t::set(float, float)	32	static
-pcGL.cpp:375:7:float p2t::get_x() const	16	static
-pcGL.cpp:379:7:float p2t::get_y() const	16	static
-pcGL.cpp:384:7:float p2t::get_r() const	16	static
-pcGL.cpp:389:7:float p2t::gets() const	24	static
-pcGL.cpp:394:5:p2t p2t::rotate(float, p2t)	48	static
-pcGL.cpp:412:5:p2t p2t::shift(float, float)	32	static
-pcGL.cpp:418:1:p2t::~p2t()	16	static
-pcGL.cpp:422:6:void drawFLine(p2t, p2t, uint32_t)	64	static
-pcGL.cpp:432:6:void drawLine(p2t, p2t, uint32_t)	48	static
-pcGL.cpp:443:6:void trackLine(p2t, p2t, uint32_t, std::set<short int>&)	48	static
+pcGL.cpp:272:9:int16_t v2px(float)	32	static
+pcGL.cpp:280:9:int16_t v2py(float)	32	static
+pcGL.cpp:288:7:float p2vx(int16_t)	32	static
+pcGL.cpp:294:7:float p2vy(int16_t)	32	static
+pcGL.cpp:300:6:void drawFLine(float, float, float, float, uint32_t)	48	static
+pcGL.cpp:347:6:void p2t::out()	16	static
+pcGL.cpp:352:1:p2t::p2t(float, float)	32	static
+pcGL.cpp:361:1:p2t::p2t(const p2t&)	16	static
+pcGL.cpp:368:6:void p2t::set(float, float)	32	static
+pcGL.cpp:376:7:float p2t::get_x() const	16	static
+pcGL.cpp:380:7:float p2t::get_y() const	16	static
+pcGL.cpp:385:7:float p2t::get_r() const	16	static
+pcGL.cpp:390:7:float p2t::gets() const	24	static
+pcGL.cpp:395:5:p2t p2t::rotate(float, p2t)	48	static
+pcGL.cpp:413:5:p2t p2t::shift(float, float)	32	static
+pcGL.cpp:419:1:p2t::~p2t()	16	static
+pcGL.cpp:423:6:void drawFLine(p2t, p2t, uint32_t)	64	static
+pcGL.cpp:433:6:void drawLine(p2t, p2t, uint32_t)	48	static
+pcGL.cpp:444:6:void trackLine(p2t, p2t, uint32_t, std::set<short int>&)	48	static
 pcGL.cpp:495:6:void polygon::out()	24	static
 stl_tree.h:692:9:std::_Rb_tree<short int, short int, std::_Identity<short int>, std::less<short int>, std::allocator<short int> >::_Rb_tree_impl<std::less<short int>, true>::~_Rb_tree_impl()	16	static
 stl_tree.h:929:7:std::_Rb_tree<_Key, _Val, _KeyOfValue, _Compare, _Alloc>::_Rb_tree() [with _Key = short int; _Val = short int; _KeyOfValue = std::_Identity<short int>; _Compare = std::less<short int>; _Alloc = std::allocator<short int>]	16	static
@@ -55,40 +55,40 @@ stl_list.h:468:7:std::__cxx11::_List_base<_Tp, _Alloc>::_List_base() [with _Tp =
 stl_list.h:681:7:std::__cxx11::list<_Tp, _Alloc>::list() [with _Tp = p2t; _Alloc = std::allocator<p2t>]	16	static
 stl_list.h:835:7:std::__cxx11::list<_Tp, _Alloc>::~list() [with _Tp = p2t; _Alloc = std::allocator<p2t>]	16	static
 pcGL.cpp:570:6:void polygon::fill(p2t, uint32_t)	232	static
-pcGL.cpp:604:6:void testFill()	240	static
-pcGL.cpp:639:1:p3t::p3t(float, float, float)	24	static
-pcGL.cpp:646:7:float p3t::get_x() const	16	static
-pcGL.cpp:651:7:float p3t::get_y() const	16	static
-pcGL.cpp:656:7:float p3t::get_z() const	16	static
-pcGL.cpp:661:7:float p3t::dist(p3t&) const	32	static
-pcGL.cpp:665:7:float p3t::dist(float, float, float) const	32	static
-pcGL.cpp:669:5:p3t p3t::shift(float, float, float) const	32	static
-pcGL.cpp:676:1:p3t::~p3t()	16	static
+pcGL.cpp:596:6:void testFill()	240	static
+pcGL.cpp:632:1:p3t::p3t(float, float, float)	24	static
+pcGL.cpp:639:7:float p3t::get_x() const	16	static
+pcGL.cpp:644:7:float p3t::get_y() const	16	static
+pcGL.cpp:649:7:float p3t::get_z() const	16	static
+pcGL.cpp:654:7:float p3t::dist(p3t&) const	32	static
+pcGL.cpp:658:7:float p3t::dist(float, float, float) const	32	static
+pcGL.cpp:662:5:p3t p3t::shift(float, float, float) const	32	static
+pcGL.cpp:669:1:p3t::~p3t()	16	static
 cmath:415:5:constexpr typename __gnu_cxx::__promote_2<_Tp, _Up>::__type std::pow(_Tp, _Up) [with _Tp = int; _Up = int]	24	static
-pcGL.cpp:689:5:p2t world2viewer(int, int, int)	96	static
-pcGL.cpp:717:5:p2t world2viewer(p3t)	32	static
-pcGL.cpp:732:6:void draw3Dcoord()	184	static
-pcGL.cpp:759:6:void drawCube()	352	static
-pcGL.cpp:795:7:float getLambda(p3t, p3t, p3t, p3t)	72	static
-pcGL.cpp:804:6:void drawShadow()	520	static
-pcGL.cpp:864:6:void rotateSquare()	304	static
-pcGL.cpp:921:6:void drawTrunk(p2t, p2t)	48	static
-pcGL.cpp:971:1:branch::branch()	112	static
-pcGL.cpp:977:1:branch::branch(p2t, p2t, float, float, uint32_t)	128	static
-pcGL.cpp:993:6:void branch::plot()	56	static
-pcGL.cpp:1001:13:std::vector<p2t> branch::get() const	16	static
-pcGL.cpp:1005:7:float branch::get_r() const	16	static
-pcGL.cpp:1008:7:float branch::get_a() const	16	static
-pcGL.cpp:1011:7:float branch::get_c() const	16	static
-pcGL.cpp:1015:1:branch::branch(const branch&)	40	static
-pcGL.cpp:1022:1:branch::~branch()	16	static
+pcGL.cpp:682:5:p2t world2viewer(int, int, int)	96	static
+pcGL.cpp:710:5:p2t world2viewer(p3t)	32	static
+pcGL.cpp:725:6:void draw3Dcoord()	184	static
+pcGL.cpp:752:6:void drawCube()	352	static
+pcGL.cpp:788:7:float getLambda(p3t, p3t, p3t, p3t)	72	static
+pcGL.cpp:797:6:void drawShadow()	520	static
+pcGL.cpp:857:6:void rotateSquare()	304	static
+pcGL.cpp:914:6:void drawTrunk(p2t, p2t)	48	static
+pcGL.cpp:964:1:branch::branch()	112	static
+pcGL.cpp:970:1:branch::branch(p2t, p2t, float, float, uint32_t)	128	static
+pcGL.cpp:986:6:void branch::plot()	56	static
+pcGL.cpp:994:13:std::vector<p2t> branch::get() const	16	static
+pcGL.cpp:998:7:float branch::get_r() const	16	static
+pcGL.cpp:1001:7:float branch::get_a() const	16	static
+pcGL.cpp:1004:7:float branch::get_c() const	16	static
+pcGL.cpp:1008:1:branch::branch(const branch&)	40	static
+pcGL.cpp:1015:1:branch::~branch()	16	static
 stl_list.h:835:7:std::__cxx11::list<_Tp, _Alloc>::~list() [with _Tp = branch; _Alloc = std::allocator<branch>]	16	static
-pcGL.cpp:1028:6:void drawTree(p2t, p2t, float, float, int)	400	static
-pcGL.cpp:1060:6:void recTree(p2t, p2t, float, float, int)	200	static
-pcGL.cpp:1076:6:void testTree()	80	static
-pcGL.cpp:1085:6:void testBranch()	136	static
-pcGL.cpp:1095:6:void drawForest(int, int)	120	static
-pcGL.cpp:1128:5:int main()	24	static
+pcGL.cpp:1021:6:void drawTree(p2t, p2t, float, float, int)	400	static
+pcGL.cpp:1053:6:void recTree(p2t, p2t, float, float, int)	200	static
+pcGL.cpp:1069:6:void testTree()	80	static
+pcGL.cpp:1078:6:void testBranch()	136	static
+pcGL.cpp:1088:6:void drawForest(int, int)	120	static
+pcGL.cpp:1121:5:int main()	24	static
 initializer_list:75:7:constexpr const _E* std::initializer_list<_E>::begin() const [with _E = short int]	16	static
 initializer_list:79:7:constexpr const _E* std::initializer_list<_E>::end() const [with _E = short int]	24	static
 stl_set.h:578:7:void std::set<_Key, _Compare, _Alloc>::insert(std::initializer_list<_Tp>) [with _Key = short int; _Compare = std::less<short int>; _Alloc = std::allocator<short int>]	32	static
@@ -424,5 +424,5 @@ new_allocator.h:99:7:_Tp* __gnu_cxx::new_allocator<_Tp>::allocate(__gnu_cxx::new
 new_allocator.h:135:2:) [with _Up = short int; _Args = {const short int&}; _Tp = std::_Rb_tree_node<short int>]	32	static
 stl_iterator.h:1042:7:std::move_iterator<_Iterator>::iterator_type std::move_iterator<_Iterator>::base() const [with _Iterator = p3t*]	16	static
 new_allocator.h:129:7:__gnu_cxx::new_allocator<_Tp>::size_type __gnu_cxx::new_allocator<_Tp>::max_size() const [with _Tp = std::_Rb_tree_node<short int>]	16	static
-pcGL.cpp:1148:1:void __static_initialization_and_destruction_0(int, int)	16	static
-pcGL.cpp:1148:1:cpp)	8	static
+pcGL.cpp:1141:1:void __static_initialization_and_destruction_0(int, int)	16	static
+pcGL.cpp:1141:1:cpp)	8	static

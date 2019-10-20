@@ -262,6 +262,7 @@ void trackLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint32_t color,se
         }
     }
 }
+
 /*
 ===============================================================================
 The virtual - physical transform function
@@ -487,7 +488,6 @@ public:
 
     //Physical fill
     void fill(p2t seed, uint32_t clr);
-    void fi(p2t seed, uint32_t clr);
 
     void out();
 };
@@ -572,15 +572,7 @@ void polygon::fill(p2t seed, uint32_t clr)
     drawPixel(seed.get_x(),seed.get_y(),clr);
     list<p2t> todo;
     todo.push_back(seed);
-/*
-    if (it = border.find(seed.gets()) != border.end()){
-        drawPixel(seed.get_x(),seed.get_y(),clr);
-        todo.push_back(seed.shift(0,1));
-        todo.push_back(seed.shift(1,0));
-        todo.push_back(seed.shift(0,-1));
-        todo.push_back(seed.shift(-1,0));
-    }
-*/
+
     //traverse the todo list until empty
     while(!todo.empty())
     {
@@ -612,6 +604,7 @@ void testFill()
     sq.pplot();
     sq.fill(p1.shift(10,10),BLUE);
 }
+
 
 /*
 ===============================================================================
@@ -1142,8 +1135,8 @@ int main (void)
     //drawForest(10,5);
     //draw3Dcoord();
     //drawCube();
-    //drawShadow();
-    testFill();
+    drawShadow();
+    //testFill();
 	return 0;
 }
 
