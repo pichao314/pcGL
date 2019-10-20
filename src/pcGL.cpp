@@ -29,7 +29,8 @@ using namespace std;
 /* Be careful with the port number and location number, because
 some of the location may not exist in that port. */
 
-#define PORT_NUM            0
+#define PORT_NUM        0
+#define LOCATION_NUM    0
 
 uint8_t src_addr[SSP_BUFSIZE];
 uint8_t dest_addr[SSP_BUFSIZE];
@@ -45,7 +46,7 @@ uint8_t dest_addr[SSP_BUFSIZE];
 
 #define swap(x, y) {x = x + y; y = x - y; x = x - y ;}
 
-// defining color values
+// defining colors
 
 #define LIGHTBLUE 0x00FFE0
 #define GREEN 0x00FF00
@@ -258,6 +259,7 @@ void drawFLine(float x0, float y0, float x1, float y1, uint32_t color)
     drawLine(v2px(x0), v2py(y0), v2px(x1), v2py(y1), color);
 }
 
+
 /*
 ===============================================================================
 The 2D point class
@@ -380,6 +382,14 @@ void drawFLine(p2t start, p2t stop, uint32_t color)
     drawLine(v2px(x0), v2py(y0), v2px(x1), v2py(y1), color);
 }
 
+void drawLine(p2t start, p2t stop, uint32_t color)
+{
+    int16_t x0 = start.get_x();
+    int16_t y0 = start.get_y();
+    int16_t x1 = stop.get_x();
+    int16_t y1 = stop.get_y();
+    drawLine(x0,y0,x1,y1,color);
+}
 /*
 ===============================================================================
 The 2D polygon class
@@ -502,9 +512,12 @@ private:
     float x,y,z;
 public:
     p3t(float x, float y, float z);
-    float get_x();
-    float get_y();
-    float get_z();
+    float get_x() const;
+    float get_y() const;
+    float get_z() const;
+    float dist(p3t& pt) const;
+    float dist(float _x, float _y, float _z) const;
+    p3t shift(float _x, float _y, float _z) const;
     ~p3t();
 };
 
@@ -515,20 +528,35 @@ p3t::p3t(float x1, float y1, float z1)
     z = z1;
 }
 
-float p3t::get_x()
+float p3t::get_x() const
 {
     return x;
 }
 
-float p3t::get_y()
+float p3t::get_y() const
 {
     return y;
 }
 
-float p3t::get_z()
+float p3t::get_z() const
 {
     return z;
 }
+
+float p3t::dist(p3t& pt) const{
+    return (sqrt(pow((x - pt.get_x()),2)+pow((y - pt.get_y()),2)+pow((z - pt.get_z()),2)));
+}
+
+float p3t::dist(float _x, float _y, float _z) const{
+    return (sqrt(pow((x - _x),2)+pow((y - _y),2)+pow((z - _z),2)));
+}
+
+p3t p3t::shift(float _x = 0, float _y = 0, float _z = 0) const{
+    p3t sf(x+_x,y+_y,z+_z);
+    return sf;
+}
+
+
 
 p3t::~p3t()
 {
@@ -542,71 +570,98 @@ The world to viewer transform
 ===============================================================================
 */
 
-
-int cursor_x = 0, cursor_y = 0;
-int rotation = 0;
-int textsize = 1;
-int x_diff = 64;
-int y_diff = 80;
-
-int cam_x = 120;
-int cam_y = 120;
-int cam_z = 120;
-
-int light_x = 22;
-int light_y = 22;
-int light_z = 60;
-
-#define LOCATION_NUM    0
-int colstart = 0;
-int rowstart = 0;
-
-
-p2t world2viewer_coord(int x_w, int y_w, int z_w)
+//process with the physical location
+p2t world2viewer(int x, int y, int z)
 {
-    int scrn_x, scrn_y, Dist=100,x_diff=ST7735_TFTWIDTH/2,y_diff=ST7735_TFTHEIGHT/2;
-    double x_p, y_p, z_p, theta,phi, rho;
-    theta = acos(cam_x/sqrt(pow(cam_x,2)+pow(cam_y,2)));
-    phi = acos(cam_z/sqrt(pow(cam_x,2)+pow(cam_y,2)+pow(cam_z,2)));
-    rho=sqrt((pow(cam_x,2))+(pow(cam_y,2))+(pow(cam_z,2)));
-    x_p = (y_w*cos(theta))-(x_w*sin(theta));
-    y_p = (z_w*sin(phi))-(x_w*cos(theta)*cos(phi))-(y_w*cos(phi)*sin(theta));
-    z_p = rho-(y_w*sin(phi)*cos(theta))-(x_w*sin(phi)*cos(theta))-(z_w*cos(phi));
-    scrn_x = x_p*Dist/z_p;
-    scrn_y = y_p*Dist/z_p;
-    scrn_x = x_diff+scrn_x;
-    scrn_y = y_diff-scrn_y;
+    int d=80,
+        x_diff=ST7735_TFTWIDTH/2,
+        y_diff=ST7735_TFTHEIGHT/2,
+        cam_x = 200,
+        cam_y = 200,
+        cam_z = 200;
 
-    float nx = p2vx(scrn_x);
-    float ny = p2vy(scrn_y);
+    float   rho = sqrt((pow(cam_x,2))+(pow(cam_y,2))+(pow(cam_z,2))),
+            theta = acos(cam_x/sqrt(pow(cam_x,2)+pow(cam_y,2))),
+            phi = acos(cam_z/sqrt(pow(cam_x,2)+pow(cam_y,2)+pow(cam_z,2)));
+    
+    float   x_v = y*cos(theta) - x*sin(theta),
+            y_v = z*sin(phi) - x*cos(theta) * cos(phi) - y*cos(phi) * sin(theta),
+            z_v = rho - y*sin(phi) * cos(theta) - x*sin(phi) * cos(theta) - z*cos(phi);
 
-    p2t screen(nx,ny);
+    int w_x = x_v * d / z_v + x_diff,
+        w_y = y_diff - y_v * d / z_v;
+/*
+    float   w_x = p2vx(x_v * d / z_v + x_diff),
+            w_y = p2vy(y_diff - y_v * d / z_v);
+*/
+
+    p2t screen(w_x,w_y);
     return screen;
+}
+
+p2t world2viewer(p3t pt)
+{
+    int x = pt.get_x(),
+        y = pt.get_y(),
+        z = pt.get_z();
+    return (world2viewer(x,y,z));
+}
+/*
+===============================================================================
+
+Draw 3d coordinates
+
+===============================================================================
+*/
+
+void draw3Dcoord(){
+    vector<p3t> cord = {
+        p3t(0,0,0),
+        p3t(200,0,0),
+        p3t(0,200,0),
+        p3t(0,0,200)
+    };
+    vector<p2t> coord;
+    uint32_t color[3] = {RED,GREEN,BLUE};
+
+    for (int i=0; i<4; i++){
+        coord.push_back(world2viewer(cord[i]));
+    }
+    for (int i=1; i<4; i++){
+        drawLine(coord[0],coord[i],color[i-1]);
+    }
 }
 
 
 /*
 ===============================================================================
 
-Draw 3D coordinate
+Draw cube
 
 ===============================================================================
 */
 
-void draw3D()
-{
-    vector<p2t> cords;
-    cords.push_back(world2viewer_coord(0,0,0));
-    cords.push_back(world2viewer_coord(180,0,0));
-    cords.push_back(world2viewer_coord(0,180,0));
-    cords.push_back(world2viewer_coord(0,0,180));
-    int32_t colors[3] = {RED, GREEN, BLUE};
+void drawCube(){
+    vector<p3t> bot3 = {
+        p3t(0,0,0),
+        p3t(100,0,0),
+        p3t(100,100,0),
+        p3t(0,100,0)
+    };
+    vector<p2t> bot;
+    vector<p2t> top;
+    for (int i=0; i<4; i++){
+        bot.push_back(world2viewer(bot3[i].shift(0,0,10)));
+        top.push_back(world2viewer(bot3[i].shift(0,0,110)));
+    }
 
-    for (int i = 1; i < 4; i++)
-    {
-        drawFLine(cords[0].get_x(),cords[0].get_y(), cords[i].get_x(), cords[i].get_y(), colors[i-1]);
+    for (int i=0; i<4; i++){
+        drawLine(bot[i],bot[(i+1)%4],YELLOW);
+        drawLine(bot[i],top[i],YELLOW);
+        drawLine(top[i],top[(i+1)%4],YELLOW );
     }
 }
+
 
 /*
 ===============================================================================
@@ -624,44 +679,47 @@ float getLambda(p3t light, p3t point, p3t arbi, p3t norm)
     return lambda;
 }
 
+
 void drawShadow()
 {
+    vector<p3t> bot3 = {
+        p3t(0,0,0),
+        p3t(100,0,0),
+        p3t(100,100,0),
+        p3t(0,100,0)
+    }, top3;
 
-    p3t a(0,0,100);
-    p3t b(0,100,0);
-    p3t c(100,100,100);
-    p3t d(100,0,0);
+    vector<p2t> bot，top, proj;
 
-    vector<p3t> top = {a,b,c,d};
+    for (int i=0; i<4; i++){
+        bot.push_back(world2viewer(bot3[i].shift(0,0,10)));
+        top.push_back(world2viewer(bot3[i].shift(0,0,110)));
+        top3.push_back(bot3[i].shift(0,0,100)]);
+    }
 
-    p3t light(-5,50,200);
+    for (int i=0; i<4; i++){
+        drawLine(bot[i],bot[(i+1)%4],YELLOW);
+        drawLine(bot[i],top[i],YELLOW);
+        drawLine(top[i],top[(i+1)%4],YELLOW );
+    }
+
+    p3t light(-50,50,300);
     p3t norm(0,0,1);
     p3t ori(0,0,0);
-    vector<p2t> tp;
 
-    for (int i = 0; i < top.size(); i++)
-    {
-        tp.push_back(world2viewer_coord(top[i].get_x(), top[i].get_y(), top[i].get_z()));
-    }
-    
-    polygon topsquare(tp,GREEN);
-    topsquare.plot();
-
-    vector<p2t> proj;
-
-    for (int i = 0; i < top.size(); i++){
-        float lambda = getLambda(light, top[i], ori, norm);
-        float x = top[i].get_x() + lambda * (light.get_x() - top[i].get_x());
-        float y = top[i].get_y() + lambda * (light.get_x() - top[i].get_x());
-        float z = top[i].get_x() + lambda * (light.get_x() - top[i].get_x());
-        proj.push_back(world2viewer_coord(x,y,z));
+    for (int i = 0; i < top3.size(); i++){
+        float lambda = getLambda(light, top3[i], ori, norm);
+        float x = top3[i].get_x() + lambda * (light.get_x() - top3[i].get_x());
+        float y = top3[i].get_y() + lambda * (light.get_x() - top3[i].get_x());
+        float z = top3[i].get_x() + lambda * (light.get_x() - top3[i].get_x());
+        proj.push_back(world2viewer(x,y,z));
     }
 
     p2t lit = world2viewer_coord(light.get_x(), light.get_y(), light.get_z());
 
     for (int i = 0; i < proj.size(); i++)
     {
-        drawLine(lit.get_x(), lit.get_y(),proj[i].get_x(),proj[i].get_y(),RED);
+        drawLine(lit,proj[i],RED);
     }
 }
 
@@ -954,8 +1012,9 @@ int main (void)
     //rotateSquare();
     //testBranch();
     //testTree();
-    drawForest(20,5);
-    //draw3D();
+    //drawForest(10,5);
+    draw3Dcoord();
+    drawCube();
     //drawShadow();
 	return 0;
 }

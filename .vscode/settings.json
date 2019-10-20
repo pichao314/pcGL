@@ -3,6 +3,8 @@
         "DUTIL"
     ],
     "files.associations": {
-        "iostream": "cpp"
+        "iostream": "cpp",
+        "cmath": "cpp",
+        "vector": "cpp"
     }
 }
