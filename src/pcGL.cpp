@@ -20,6 +20,7 @@
 #include <cstdlib>
 #include <string>
 #include <vector>
+#include <map>
 #include <list>
 #include <cmath>
 #include <time.h>
@@ -177,6 +178,8 @@ void drawPixel(int16_t x, int16_t y, uint32_t color)
     write888(color, 1);
 }
 
+
+
 /*****************************************************************************
 * Descriptions:        Draw line function
 * parameters:           Starting point (x0,y0), Ending point(x1,y1) and color
@@ -220,6 +223,45 @@ void drawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint32_t color)
     }
 }
 
+void trackLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint32_t color,map<int16_t,uint32_t>& border)
+{
+    int16_t slope = abs(y1 - y0) > abs(x1 - x0);
+    if (slope) {
+        swap(x0, y0);
+        swap(x1, y1);
+    }
+    if (x0 > x1) {
+        swap(x0, x1);
+        swap(y0, y1);
+    }
+    int16_t dx, dy;
+    dx = x1 - x0;
+    dy = abs(y1 - y0);
+    int16_t err = dx / 2;
+    int16_t ystep;
+    if (y0 < y1) {
+        ystep = 1;
+    }
+    else {
+        ystep = -1;
+    }
+    for (; x0 <= x1; x0++) {
+        if (slope) {
+            drawPixel(y0, x0, color);
+            border.insert({y0*_width+x0,color});
+        }
+        else {
+            drawPixel(x0, y0, color);
+            border.insert({y0*_width+x0,color});
+        }
+        lcddelay(1);
+        err -= dy;
+        if (err < 0) {
+            y0 += ystep;
+            err += dx;
+        }
+    }
+}
 /*
 ===============================================================================
 The virtual - physical transform function
@@ -390,6 +432,17 @@ void drawLine(p2t start, p2t stop, uint32_t color)
     int16_t y1 = stop.get_y();
     drawLine(x0,y0,x1,y1,color);
 }
+
+
+
+void trackLine(p2t start, p2t stop, uint32_t color, map<int16_t,uint32_t>& border)
+{
+    int16_t x0 = start.get_x();
+    int16_t y0 = start.get_y();
+    int16_t x1 = stop.get_x();
+    int16_t y1 = stop.get_y();
+    trackLine(x0,y0,x1,y1,color,border);
+}
 /*
 ===============================================================================
 The 2D polygon class
@@ -425,6 +478,12 @@ public:
 
     //Plot the polygon
     void plot();
+
+    //Physical plot
+    void pplot();
+
+    //Physical fill
+    void fill(p2t seed);
 
     void out();
 };
@@ -497,6 +556,22 @@ void polygon::plot()
     }
 }
 
+void polygon::pplot()
+{
+    int n = corner.size();
+    //traverse the corner location and plot each side
+    for (int i = 0; i < n; i++)
+    {
+        //cout << "\nNow plotting" << i << " to " << (i+1)%4<<endl;
+        drawLine(corner[i].get_x(), corner[i].get_y(), corner[(i+1)%n].get_x(), corner[(i+1)%n].get_y(), _color);
+    }
+}
+
+void polygon::fill(p2t seed)
+{
+    map<int16_t,uint32_t> border;
+    trackLine(corner[0],corner[2],_color,border);
+}
 
 /*
 ===============================================================================
@@ -573,7 +648,7 @@ The world to viewer transform
 //process with the physical location
 p2t world2viewer(int x, int y, int z)
 {
-    int d=80,
+    int d=50,
         x_diff=ST7735_TFTWIDTH/2,
         y_diff=ST7735_TFTHEIGHT/2,
         cam_x = 200,
@@ -617,9 +692,9 @@ Draw 3d coordinates
 void draw3Dcoord(){
     vector<p3t> cord = {
         p3t(0,0,0),
-        p3t(200,0,0),
-        p3t(0,200,0),
-        p3t(0,0,200)
+        p3t(250,0,0),
+        p3t(0,250,0),
+        p3t(0,0,250)
     };
     vector<p2t> coord;
     uint32_t color[3] = {RED,GREEN,BLUE};
@@ -655,10 +730,16 @@ void drawCube(){
         top.push_back(world2viewer(bot3[i].shift(0,0,110)));
     }
 
+    polygon bottom(bot,YELLOW);
+    polygon upper(top,YELLOW);
+    upper.pplot();
+    upper.fill(upper.get()[0]);
+    bottom.pplot();
+
     for (int i=0; i<4; i++){
-        drawLine(bot[i],bot[(i+1)%4],YELLOW);
+       // drawLine(bot[i],bot[(i+1)%4],YELLOW);
         drawLine(bot[i],top[i],YELLOW);
-        drawLine(top[i],top[(i+1)%4],YELLOW );
+        //drawLine(top[i],top[(i+1)%4],YELLOW );
     }
 }
 
@@ -687,39 +768,45 @@ void drawShadow()
         p3t(100,0,0),
         p3t(100,100,0),
         p3t(0,100,0)
-    }, top3;
+    };
+    vector<p3t> top3;
 
-    vector<p2t> bot，top, proj;
+    vector<p2t> bot;
+    vector<p2t> top;
+    vector<p2t> proj;
 
     for (int i=0; i<4; i++){
         bot.push_back(world2viewer(bot3[i].shift(0,0,10)));
         top.push_back(world2viewer(bot3[i].shift(0,0,110)));
-        top3.push_back(bot3[i].shift(0,0,100)]);
+        top3.push_back(bot3[i].shift(0,0,110));
+    }
+
+    p3t light(-50,50,250);
+    p3t norm(0,0,10);
+    p3t ori(0,0,0);
+
+    for (int i = 0; i < top3.size(); i++){
+        float lambda = getLambda(light, top3[i], ori, norm);
+        cout << "The lambda value of "<<i+1<<"th corner is "<< lambda <<endl;
+        float x = top3[i].get_x() + lambda * (light.get_x() - top3[i].get_x());
+        float y = top3[i].get_y() + lambda * (light.get_y() - top3[i].get_y());
+        float z = top3[i].get_z() + lambda * (light.get_z() - top3[i].get_z());
+        cout << "The location is ("<<x<<","<<y<<","<<z<<")\n";
+        proj.push_back(world2viewer(x,y,z));
+    }
+
+    p2t lit = world2viewer(light.get_x(), light.get_y(), light.get_z());
+
+    for (int i = 0; i < proj.size(); i++)
+    {
+        drawLine(lit,proj[i],PURPLE);
+        drawLine(proj[i],proj[(i+1)%4],WHITE);
     }
 
     for (int i=0; i<4; i++){
         drawLine(bot[i],bot[(i+1)%4],YELLOW);
         drawLine(bot[i],top[i],YELLOW);
         drawLine(top[i],top[(i+1)%4],YELLOW );
-    }
-
-    p3t light(-50,50,300);
-    p3t norm(0,0,1);
-    p3t ori(0,0,0);
-
-    for (int i = 0; i < top3.size(); i++){
-        float lambda = getLambda(light, top3[i], ori, norm);
-        float x = top3[i].get_x() + lambda * (light.get_x() - top3[i].get_x());
-        float y = top3[i].get_y() + lambda * (light.get_x() - top3[i].get_x());
-        float z = top3[i].get_x() + lambda * (light.get_x() - top3[i].get_x());
-        proj.push_back(world2viewer(x,y,z));
-    }
-
-    p2t lit = world2viewer_coord(light.get_x(), light.get_y(), light.get_z());
-
-    for (int i = 0; i < proj.size(); i++)
-    {
-        drawLine(lit,proj[i],RED);
     }
 }
 
