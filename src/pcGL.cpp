@@ -766,7 +766,7 @@ void drawCube(){
     polygon bottom(bot,YELLOW);
     polygon upper(top,YELLOW);
     upper.pplot();
-    upper.fill(upper.get()[0].shift(0,-10),YELLOW);
+    //upper.fill(upper.get()[0].shift(0,-10),YELLOW);
     bottom.pplot();
 
     for (int i=0; i<4; i++){
@@ -1070,7 +1070,7 @@ void testTree()
 {
     p2t start(0,-1);
     p2t stop(0,-0.5);
-    drawTree(start, stop, 0.8,30,5);
+    drawTree(start, stop, 0.8,30,10);
     //recTree(start, stop, 0.8,30,10);   
 }
 
@@ -1132,9 +1132,9 @@ int main (void)
     //rotateSquare();
     //testBranch();
     //testTree();
-    //drawForest(10,5);
-    //draw3Dcoord();
-    //drawCube();
+    //drawForest(30,5);
+    draw3Dcoord();
+    drawCube();
     drawShadow();
     //testFill();
 	return 0;

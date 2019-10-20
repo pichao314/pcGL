@@ -68,7 +68,7 @@ cmath:415:5:constexpr typename __gnu_cxx::__promote_2<_Tp, _Up>::__type std::pow
 pcGL.cpp:682:5:p2t world2viewer(int, int, int)	96	static
 pcGL.cpp:710:5:p2t world2viewer(p3t)	32	static
 pcGL.cpp:725:6:void draw3Dcoord()	184	static
-pcGL.cpp:752:6:void drawCube()	352	static
+pcGL.cpp:752:6:void drawCube()	320	static
 pcGL.cpp:788:7:float getLambda(p3t, p3t, p3t, p3t)	72	static
 pcGL.cpp:797:6:void drawShadow()	520	static
 pcGL.cpp:857:6:void rotateSquare()	304	static
