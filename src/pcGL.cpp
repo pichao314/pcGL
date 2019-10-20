@@ -20,7 +20,7 @@
 #include <cstdlib>
 #include <string>
 #include <vector>
-#include <map>
+#include <set>
 #include <list>
 #include <cmath>
 #include <time.h>
@@ -223,7 +223,7 @@ void drawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint32_t color)
     }
 }
 
-void trackLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint32_t color,map<int16_t,uint32_t>& border)
+void trackLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint32_t color,set<int16_t>& border)
 {
     int16_t slope = abs(y1 - y0) > abs(x1 - x0);
     if (slope) {
@@ -248,11 +248,11 @@ void trackLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint32_t color,ma
     for (; x0 <= x1; x0++) {
         if (slope) {
             drawPixel(y0, x0, color);
-            border.insert({y0*_width+x0,color});
+            border.insert({y0*_width+x0});
         }
         else {
             drawPixel(x0, y0, color);
-            border.insert({y0*_width+x0,color});
+            border.insert({y0*_width+x0});
         }
         lcddelay(1);
         err -= dy;
@@ -329,6 +329,7 @@ public:
     float get_x() const;
     float get_y() const;
     float get_r() const;
+    float gets() const;
 
     //Rotate the point with respect to angle and center and return as a new point
     p2t rotate(float angle, p2t center);
@@ -385,6 +386,10 @@ float p2t::get_r() const
     return rho;
 }
 
+float p2t::gets() const{
+    return _y * _width + _width;
+}
+
 
 p2t p2t::rotate(float angle, p2t center)
 {
@@ -435,7 +440,7 @@ void drawLine(p2t start, p2t stop, uint32_t color)
 
 
 
-void trackLine(p2t start, p2t stop, uint32_t color, map<int16_t,uint32_t>& border)
+void trackLine(p2t start, p2t stop, uint32_t color, set<int16_t>& border)
 {
     int16_t x0 = start.get_x();
     int16_t y0 = start.get_y();
@@ -456,6 +461,7 @@ private:
     //The corner locations are stored in vector for dynamic allocating
     vector<p2t> corner;
     uint32_t _color;
+    set<int16_t> border;
 
 public:
     //Constructor, input should be vector also
@@ -466,9 +472,6 @@ public:
 
     //Destructor
     ~polygon();
-
-    //Setter
-    void set(const vector<p2t> plg, uint32_t color);
 
     //Getter
     vector<p2t> get()const;
@@ -483,7 +486,8 @@ public:
     void pplot();
 
     //Physical fill
-    void fill(p2t seed);
+    void fill(p2t seed, uint32_t clr);
+    void fi(p2t seed, uint32_t clr);
 
     void out();
 };
@@ -514,11 +518,6 @@ polygon::polygon(const polygon& plg)
 polygon::~polygon()
 {
     
-}
-
-void polygon::set(const vector<p2t> plg, uint32_t color = 0x000000)
-{
-    polygon(plg, color);
 }
 
 vector<p2t> polygon::get() const
@@ -563,14 +562,55 @@ void polygon::pplot()
     for (int i = 0; i < n; i++)
     {
         //cout << "\nNow plotting" << i << " to " << (i+1)%4<<endl;
-        drawLine(corner[i].get_x(), corner[i].get_y(), corner[(i+1)%n].get_x(), corner[(i+1)%n].get_y(), _color);
+        //drawLine(corner[i].get_x(), corner[i].get_y(), corner[(i+1)%n].get_x(), corner[(i+1)%n].get_y(), _color);
+        trackLine(corner[i].get_x(), corner[i].get_y(), corner[(i+1)%n].get_x(), corner[(i+1)%n].get_y(), _color,border);
     }
 }
 
-void polygon::fill(p2t seed)
+void polygon::fill(p2t seed, uint32_t clr)
 {
-    map<int16_t,uint32_t> border;
-    trackLine(corner[0],corner[2],_color,border);
+    drawPixel(seed.get_x(),seed.get_y(),clr);
+    list<p2t> todo;
+    todo.push_back(seed);
+/*
+    if (it = border.find(seed.gets()) != border.end()){
+        drawPixel(seed.get_x(),seed.get_y(),clr);
+        todo.push_back(seed.shift(0,1));
+        todo.push_back(seed.shift(1,0));
+        todo.push_back(seed.shift(0,-1));
+        todo.push_back(seed.shift(-1,0));
+    }
+*/
+    //traverse the todo list until empty
+    while(!todo.empty())
+    {
+        p2t tmp = todo.front();
+        todo.pop_front();
+        p2t tw = tmp.shift(-1,0);
+        p2t te = tmp.shift(1,0);
+        p2t tn = tmp.shift(0,1);
+        p2t ts = tmp.shift(0,-1);
+        vector<p2t> tp = {tw,te,tn,ts};
+        for (int i = 0; i < 4; i++)
+        {
+            if (border.find(tp[i].gets()) == border.end()){
+                drawPixel(tp[i].get_x(),tp[i].get_y(),clr);
+                todo.push_back(tp[i]);
+            }
+        }
+    }
+}
+
+void testFill()
+{
+    p2t p1(40,40);
+    p2t p2(80,40);
+    p2t p3(80,120);
+    p2t p4(40,120);
+    vector<p2t> square = {p1,p2,p3,p4};
+    polygon sq(square, GREEN);
+    sq.pplot();
+    sq.fill(p1.shift(10,10),BLUE);
 }
 
 /*
@@ -733,7 +773,7 @@ void drawCube(){
     polygon bottom(bot,YELLOW);
     polygon upper(top,YELLOW);
     upper.pplot();
-    upper.fill(upper.get()[0]);
+    upper.fill(upper.get()[0].shift(0,-10),YELLOW);
     bottom.pplot();
 
     for (int i=0; i<4; i++){
@@ -1100,9 +1140,10 @@ int main (void)
     //testBranch();
     //testTree();
     //drawForest(10,5);
-    draw3Dcoord();
-    drawCube();
+    //draw3Dcoord();
+    //drawCube();
     //drawShadow();
+    testFill();
 	return 0;
 }
 
