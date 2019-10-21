@@ -1132,7 +1132,9 @@ int main (void)
     //rotateSquare();
     //testBranch();
     //testTree();
-    //drawForest(30,5);
+    cout << "Start to draw Forest!"<<endl;
+    drawForest(30,5);
+    cout << "start to drwa 3D Shadow!"<<endl;
     draw3Dcoord();
     drawCube();
     drawShadow();
