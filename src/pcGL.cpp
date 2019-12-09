@@ -223,45 +223,6 @@ void drawLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint32_t color)
     }
 }
 
-void trackLine(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint32_t color,set<int16_t>& border)
-{
-    int16_t slope = abs(y1 - y0) > abs(x1 - x0);
-    if (slope) {
-        swap(x0, y0);
-        swap(x1, y1);
-    }
-    if (x0 > x1) {
-        swap(x0, x1);
-        swap(y0, y1);
-    }
-    int16_t dx, dy;
-    dx = x1 - x0;
-    dy = abs(y1 - y0);
-    int16_t err = dx / 2;
-    int16_t ystep;
-    if (y0 < y1) {
-        ystep = 1;
-    }
-    else {
-        ystep = -1;
-    }
-    for (; x0 <= x1; x0++) {
-        if (slope) {
-            drawPixel(y0, x0, color);
-            border.insert({y0*_width+x0});
-        }
-        else {
-            drawPixel(x0, y0, color);
-            border.insert({y0*_width+x0});
-        }
-        lcddelay(1);
-        err -= dy;
-        if (err < 0) {
-            y0 += ystep;
-            err += dx;
-        }
-    }
-}
 
 /*
 ===============================================================================
@@ -331,6 +292,7 @@ public:
     float get_y() const;
     float get_r() const;
     float gets() const;
+    float dist(p2t& other);
 
     //Rotate the point with respect to angle and center and return as a new point
     p2t rotate(float angle, p2t center);
@@ -343,6 +305,11 @@ public:
     //Destructor
     ~p2t();
 };
+
+float p2t::dist(p2t& other)
+{
+    return( sqrt(pow((_x - other.get_x()),2) + pow((_y - other.get_y()),2)));
+}
 
 void p2t::out()
 {
@@ -440,15 +407,6 @@ void drawLine(p2t start, p2t stop, uint32_t color)
 }
 
 
-
-void trackLine(p2t start, p2t stop, uint32_t color, set<int16_t>& border)
-{
-    int16_t x0 = start.get_x();
-    int16_t y0 = start.get_y();
-    int16_t x1 = stop.get_x();
-    int16_t y1 = stop.get_y();
-    trackLine(x0,y0,x1,y1,color,border);
-}
 /*
 ===============================================================================
 The 2D polygon class
@@ -487,7 +445,7 @@ public:
     void pplot();
 
     //Physical fill
-    void fill(p2t seed, uint32_t clr);
+    //void fill(p2t seed, uint32_t clr);
 
     void out();
 };
@@ -562,49 +520,9 @@ void polygon::pplot()
     for (int i = 0; i < n; i++)
     {
         //cout << "\nNow plotting" << i << " to " << (i+1)%4<<endl;
-        //drawLine(corner[i].get_x(), corner[i].get_y(), corner[(i+1)%n].get_x(), corner[(i+1)%n].get_y(), _color);
-        trackLine(corner[i].get_x(), corner[i].get_y(), corner[(i+1)%n].get_x(), corner[(i+1)%n].get_y(), _color,border);
+        drawLine(corner[i].get_x(), corner[i].get_y(), corner[(i+1)%n].get_x(), corner[(i+1)%n].get_y(), _color);
     }
 }
-
-void polygon::fill(p2t seed, uint32_t clr)
-{
-    drawPixel(seed.get_x(),seed.get_y(),clr);
-    list<p2t> todo;
-    todo.push_back(seed);
-
-    //traverse the todo list until empty
-    while(!todo.empty())
-    {
-        p2t tmp = todo.front();
-        todo.pop_front();
-        p2t tw = tmp.shift(-1,0);
-        p2t te = tmp.shift(1,0);
-        p2t tn = tmp.shift(0,1);
-        p2t ts = tmp.shift(0,-1);
-        vector<p2t> tp = {tw,te,tn,ts};
-        for (int i = 0; i < 4; i++)
-        {
-            if (border.find(tp[i].gets()) == border.end()){
-                drawPixel(tp[i].get_x(),tp[i].get_y(),clr);
-                todo.push_back(tp[i]);
-            }
-        }
-    }
-}
-
-void testFill()
-{
-    p2t p1(40,40);
-    p2t p2(80,40);
-    p2t p3(80,120);
-    p2t p4(40,120);
-    vector<p2t> square = {p1,p2,p3,p4};
-    polygon sq(square, GREEN);
-    sq.pplot();
-    sq.fill(p1.shift(10,10),BLUE);
-}
-
 
 /*
 ===============================================================================
@@ -684,9 +602,9 @@ p2t world2viewer(int x, int y, int z)
     int d=50,
         x_diff=ST7735_TFTWIDTH/2,
         y_diff=ST7735_TFTHEIGHT/2,
-        cam_x = 200,
-        cam_y = 200,
-        cam_z = 200;
+        cam_x = 150,
+        cam_y = 150,
+        cam_z = 250;
 
     float   rho = sqrt((pow(cam_x,2))+(pow(cam_y,2))+(pow(cam_z,2))),
             theta = acos(cam_x/sqrt(pow(cam_x,2)+pow(cam_y,2))),
@@ -843,274 +761,541 @@ void drawShadow()
     }
 }
 
-
 /*
 
 ===============================================================================
 
-HW1:Rotate Square Screen Saver
+Lab 2:Diffuse Reflection
 
 ===============================================================================
 
 */
 
-void rotateSquare()
-{
-    uint32_t color[] = {LIGHTBLUE, GREEN, DARKBLUE, BLACK, BLUE, RED, MAGENTA, WHITE, PURPLE,YELLOW,PINK, BROWN};
-    /*
-    p2t p1(-0.5,-0.5);
-    p2t p2(0.5,-0.5);
-    p2t p3(0.5,0.5);
-    p2t p4(-0.5,0.5);
-    vector<p2t> square = {p1,p2,p3,p4};
-    polygon sq(square, GREEN);
-    */
-
-    float rate;
-    cout << "Please input the rate(input 0 would be set to default rate 0.8):";
-    cin >> rate;
-    if (rate == 0)
-    {
-        rate = 0.8;
-    }
-    srand(time(NULL));
-
-    for (int i = 0; i < 100; i++)
-    {
-        //random location
-        p2t ori(p2vx(rand()%_width),p2vy(rand()%_height));
-        //random size
-        float size;
-        size = p2vx(rand()%_width)/2.0;
-        //random color
-        int clr;
-        clr = rand()%12;
-        //Generate square vector
-        p2t p1(ori.shift(-size,size));
-        p2t p2(ori.shift(-size, -size));
-        p2t p3(ori.shift(size, -size));
-        p2t p4(ori.shift(size, size));
-        vector<p2t> square = {p1,p2,p3,p4};
-        polygon sq(square, color[clr]);
-        for (int i = 0; i < 11; i++)
-        {
-            sq.plot();
-            sq.shrink(rate);
-        }
-    }
-}
-
-/*
-
-===============================================================================
-
-Lab 1:Foreset
-
-===============================================================================
-
-*/
-
-//draw the initial trunk with brown
-void drawTrunk(p2t start, p2t stop)
-{
-    float len = stop.get_y() - start.get_y();
-    float wid = len / 5.0;
-
-    int16_t x0 = v2px(start.get_x() - wid);
-    int16_t y0 = v2py(start.get_y());
-    int16_t x1 = v2px(stop.get_x() + wid);
-    int16_t y1 = v2py(stop.get_y());
-
-    //cout << "Now printing "<< x0 <<','<<y0<<" to "<<x1<<','<<y1<<endl;
-    if (x1 < x0)
-    {
-        swap(x0,x1);
-    }
-    if (y1 < y0)
-    {
-        swap(y1,y0);
-    }
-    for (int i = x0; i <= x1; i++)
-    {
-        for (int j = y0; j <= y1; j++)
-        {
-            drawPixel(i,j,BROWN);
-        }
-    }
-}
-
-//A branch class
-
-class branch
+class dfpolygon
 {
 private:
-    vector<p2t> node;
-    uint32_t color;
-    float rate;
-    float angle;
+    //The corner locations are stored in vector for dynamic allocating
+    vector<p2t> corner;
+    vector<uint32_t> cnr_clr;
+    vector<p2t> border_l;
+    vector<p2t> border_r;
+
 
 public:
-    branch();
-    branch(p2t start, p2t stop, float _rate, float _angle,  uint32_t _color);
-    branch(const branch &br);
+    //Constructor, input should be vector also
+    dfpolygon(vector<p2t> plg, vector<uint32_t> colors);
+
+    void ddal1();
+    void ddal2();
+    void ddar1();
+    void ddar2();
+    void dda(p2t a, p2t b, uint32_t clr1, uint32_t clr2);
+    //Plot the polygon
     void plot();
-    vector<p2t> get() const;
-    float get_r() const;
-    float get_a() const;
-    float get_c() const;
-    ~branch();
+    void getlen();
+    void bdout();
+
+    //Fill with bilinear interpolation
+    void fill();
 };
 
-branch::branch(){
-    p2t start(0,-1);
-    p2t stop(0,-0.5);
-    branch(start, stop, 0.8, 30, GREEN);
-}
-
-branch::branch(p2t start, p2t stop, float _rate, float _angle,  uint32_t _color)
-{
-    rate = _rate;
-    angle = _angle;
-    color = _color;
-    float a = stop.get_x() + rate * (stop.get_x() - start.get_x());
-    float b = stop.get_y() + rate * (stop.get_y() - start.get_y());
-    p2t mid(a,b);
-    p2t left = mid.rotate(angle,stop);      
-    p2t right = mid.rotate(360-angle, stop);
-    node.push_back(stop);
-    node.push_back(mid);
-    node.push_back(left);
-    node.push_back(right);
-}
-
-void branch::plot()
-{
-    for (int i = 1; i < node.size(); i++)
+void dfpolygon::bdout(){
+    cout << "Left border:";
+    for (vector<p2t>::iterator it = border_l.begin(); it != border_l.end(); ++it)
     {
-        drawFLine(node[0], node[i],color);
+        it->out();
+    }
+    cout << "Right border:";
+    for (vector<p2t>::iterator it = border_r.begin(); it != border_r.end(); ++it)
+    {
+        it->out();
+    }
+    cout << endl;
+}
+
+void dfpolygon::getlen(){
+    cout << "length of left is "<<border_l.size() << endl;
+    cout << "length of right is "<<border_r.size() << endl;
+}
+
+dfpolygon::dfpolygon(vector<p2t> plg, vector<uint32_t> colors)
+{
+    for (vector<p2t>::iterator it = plg.begin(); it != plg.end(); ++it)
+    {
+        corner.push_back(*it);
+    }
+    for (vector<uint32_t>::iterator it = colors.begin(); it != colors.end(); ++it)
+    {
+        cnr_clr.push_back(*it);
     }
 }
 
-vector<p2t> branch::get() const{
-    return node;
+void toRGB(uint32_t clr, uint32_t* rgb){
+    rgb[0] = clr >> 16;
+    rgb[1] = (clr >> 8) - (rgb[0]<<8);
+    rgb[2] = clr - (rgb[0]<<16) - (rgb[1]<<8);
 }
 
-float branch::get_r() const{
-    return rate;   
+uint32_t fromRGB(uint32_t* rgb){
+    uint32_t clr = (rgb[0] << 16) + (rgb[1]<<8) + rgb[2];
+    return clr;
 }
-float branch::get_a() const{
-    return angle;
-}
-float branch::get_c() const{
+
+uint32_t color_calc(p2t a, p2t b, p2t c, uint32_t clr0, uint32_t clr1)
+{
+    uint32_t rgb0[3],rgb1[3],rgb2[3];
+    toRGB(clr0, rgb0);
+    toRGB(clr1, rgb2);
+
+    rgb1[0] = rgb2[0] < rgb0[0] ? rgb0[0] - abs(int(rgb2[0] - rgb0[0])) * a.dist(b)/a.dist(c):rgb0[0] + abs(int(rgb2[0] - rgb0[0])) * a.dist(b)/a.dist(c);
+    rgb1[1] = rgb2[1] < rgb0[1] ? rgb0[1] - abs(int(rgb2[1] - rgb0[1])) * a.dist(b)/a.dist(c):rgb0[1] + abs(int(rgb2[1] - rgb0[1])) * a.dist(b)/a.dist(c);
+    rgb1[2] = rgb2[2] < rgb0[2] ? rgb0[2] - abs(int(rgb2[2] - rgb0[2])) * a.dist(b)/a.dist(c):rgb0[2] + abs(int(rgb2[2] - rgb0[2])) * a.dist(b)/a.dist(c);
+
+
+    for (int i = 0; i < 3; i ++)
+    {
+        if (rgb1[i] > 0xFF)
+            rgb1[i] = 0xFF;
+    }
+
+    uint32_t color;
+    color = fromRGB(rgb1);
     return color;
 }
 
-branch::branch(const branch& br){
-    node = br.get();
-    rate = br.get_r();
-    angle = br.get_a();
-    color = br.get_c();
+uint32_t diffuse(p3t source, p3t corner, float* k){
+    uint32_t rgb[3];
+    p3t origin(0,0,0);
+    p3t normal(0,0,1);
+    p3t r(source.get_x() - corner.get_x(),source.get_y() - corner.get_y(), source.get_z() - corner.get_z());
+    float upper = normal.get_x()*r.get_x() + normal.get_y()*r.get_y()+normal.get_z()*r.get_z();
+    float bot = normal.dist(origin) * pow(r.dist(origin),3);
+    rgb[0] = k[0] * 3.4 * 3000000 * upper / bot;
+    rgb[1] = k[1] * 1000000 * upper / bot;
+    rgb[2] = k[2] * 1000000 * upper / bot;
+    
+    uint32_t color = fromRGB(rgb);
+    //return RED;
+    return color;
 }
 
-branch::~branch()
-{
-}
+void dfpolygon::dda(p2t a, p2t b, uint32_t clr1, uint32_t clr2)
+{   
+    //cout << "clr1 is "<<hex<<clr1<<", clr2 is "<<hex<<clr2<<endl;
+    int16_t x0 = a.get_x();
+    int16_t y0 = a.get_y();
+    int16_t x1 = b.get_x();
+    int16_t y1 = b.get_y();
+    uint32_t color;
 
-//Function to draw tree
-
-void drawTree(p2t start, p2t stop, float rate, float angle, int level)
-{
-    drawTrunk(start, stop);
-    branch init(start,stop,rate,angle,GREEN);
-    //use list to store the branch
-    list<branch> tree = {init};
-
-    //traverse the tree node with specified level
-    for (int i = 0; i < level; i ++)
-    {
-        //plot 3^i trees on i-th level
-        cout << "Now plotting the "<<i+1<<"th level"<<endl;
-        for (int j = 0; j < pow(3,i);j++)
-        {
-            branch tmp(tree.front());
-            tree.pop_front();
-            tmp.plot();
-            vector<p2t> temp(tmp.get());
-            if (i != level -1)
-            {
-                branch mid(temp[0],temp[1],rate,angle,GREEN);
-                branch left(temp[0],temp[2],rate, angle,GREEN);
-                branch right(temp[0],temp[3],rate, angle,GREEN);
-                tree.push_back(mid);
-                tree.push_back(left);
-                tree.push_back(right);
-            }
+    int16_t slope = abs(y1 - y0) > abs(x1 - x0);
+    if (slope) {
+        swap(x0, y0);
+        swap(x1, y1);
+    }
+    if (x0 > x1) {
+        swap(x0, x1);
+        swap(y0, y1);
+    }
+    int16_t dx, dy;
+    dx = x1 - x0;
+    dy = abs(y1 - y0);
+    int16_t err = dx / 2;
+    int16_t ystep;
+    if (y0 < y1) {
+        ystep = 1;
+    }
+    else {
+        ystep = -1;
+    }
+    for (; x0 <= x1; x0++) {
+        if (slope) {
+            p2t tmp(y0,x0);
+            color = color_calc(a,tmp,b,clr1,clr2);
+            drawPixel(y0, x0, color);
+        }
+        else {
+            p2t tmp(x0,y0);
+            color = color_calc(a,tmp,b,clr1,clr2);
+            drawPixel(x0, y0, color);
+        }
+        lcddelay(1);
+        err -= dy;
+        if (err < 0) {
+            y0 += ystep;
+            err += dx;
         }
     }
 }
 
-//recursive version of drawTree
-void recTree(p2t start, p2t stop, float rate, float angle, int level)
-{
-    if (level == 0)
-        return;
-    drawFLine(start.get_x(), start.get_y(), stop.get_x(), stop.get_y(), GREEN);
-    float a = stop.get_x() + rate * (stop.get_x() - start.get_x());
-    float b = stop.get_y() + rate * (stop.get_y() - start.get_y());
-    p2t mid(a,b);
-    p2t left = mid.rotate(angle,stop);
-    p2t right = mid.rotate(360-angle, stop);
-    recTree(stop, left, rate, angle, level-1);
-    //recTree(stop, mid, rate, angle, level-1);
-    recTree(stop, right, rate, angle, level -1);
-}
+void dfpolygon::ddal1()
+{   
+    int16_t x0 = corner[0].get_x();
+    int16_t y0 = corner[0].get_y();
+    int16_t x1 = corner[3].get_x();
+    int16_t y1 = corner[3].get_y();
+    uint32_t color;
 
-//function to test tree
-void testTree()
-{
-    p2t start(0,-1);
-    p2t stop(0,-0.5);
-    drawTree(start, stop, 0.8,30,10);
-    //recTree(start, stop, 0.8,30,10);   
-}
-
-//function to test branch
-void testBranch()
-{
-    p2t start(0,-1);
-    p2t stop(0,-0.5);
-    drawTrunk(start, stop);
-    branch br(start,stop,0.8,30,GREEN);
-    br.plot();
-}
-
-//Function to generate forest with randomized location, reduction and angle
-void drawForest(int nums, int level)
-{
-    for(int i = 0; i < nums; i++)
-    {
-        srand(time(NULL));
-        //random location
-        float stx = rand()%170/100.0-0.8;
-        float sty = rand()%10/10.0 - 1.0;
-        float len = rand()%25/100.0 + 0.25;
-        p2t start(stx,sty);
-        cout << " start:";
-        start.out();
-        p2t stop(start.shift(0,len));
-        cout << " stop:";
-        stop.out();
-        cout << endl;
-
-        //random angle
-        float angle = rand()%60+30.0;
-
-        //random reduction
-        float rate = rand()%10/20.0+0.3;
-        drawTree(start,stop, rate,angle,level);
+    int16_t slope = abs(y1 - y0) > abs(x1 - x0);
+    if (slope) {
+        swap(x0, y0);
+        swap(x1, y1);
+    }
+    if (x0 > x1) {
+        swap(x0, x1);
+        swap(y0, y1);
+    }
+    int16_t dx, dy;
+    dx = x1 - x0;
+    dy = abs(y1 - y0);
+    int16_t err = dx / 2;
+    int16_t ystep;
+    if (y0 < y1) {
+        ystep = 1;
+    }
+    else {
+        ystep = -1;
+    }
+    for (; x0 <= x1; x0++) {
+        if (slope) {
+            p2t tmp(y0,x0);
+            border_l.push_back(tmp);
+            color = color_calc(corner[0],tmp,corner[3],cnr_clr[0],cnr_clr[3]);
+            drawPixel(y0, x0, color);
+        }
+        else {
+            p2t tmp(x0,y0);
+            border_l.push_back(tmp);
+            color = color_calc(corner[0],tmp,corner[3],cnr_clr[0],cnr_clr[3]);
+            drawPixel(x0, y0, color);
+        }
+        lcddelay(1);
+        err -= dy;
+        if (err < 0) {
+            y0 += ystep;
+            err += dx;
+        }
     }
 }
 
+void dfpolygon::ddal2()
+{   
+    int16_t x0 = corner[3].get_x();
+    int16_t y0 = corner[3].get_y();
+    int16_t x1 = corner[2].get_x();
+    int16_t y1 = corner[2].get_y();
+    uint32_t color;
+
+    int16_t slope = abs(y1 - y0) > abs(x1 - x0);
+    if (slope) {
+        swap(x0, y0);
+        swap(x1, y1);
+    }
+    if (x0 > x1) {
+        swap(x0, x1);
+        swap(y0, y1);
+    }
+    int16_t dx, dy;
+    dx = x1 - x0;
+    dy = abs(y1 - y0);
+    int16_t err = dx / 2;
+    int16_t ystep;
+    if (y0 < y1) {
+        ystep = 1;
+    }
+    else {
+        ystep = -1;
+    }
+    for (; x0 <= x1; x0++) {
+        if (slope) {
+            p2t tmp(y0,x0);
+            border_l.push_back(tmp);
+            color = color_calc(corner[3],tmp,corner[2],cnr_clr[3],cnr_clr[2]);
+            drawPixel(y0, x0, color);
+        }
+        else {
+            p2t tmp(x0,y0);
+            border_l.push_back(tmp);
+            color = color_calc(corner[3],tmp,corner[2],cnr_clr[3],cnr_clr[2]);
+            drawPixel(x0, y0, color);
+        }
+        lcddelay(1);
+        err -= dy;
+        if (err < 0) {
+            y0 += ystep;
+            err += dx;
+        }
+    }
+}
+
+void dfpolygon::ddar1()
+{   
+    int16_t x0 = corner[0].get_x();
+    int16_t y0 = corner[0].get_y();
+    int16_t x1 = corner[1].get_x();
+    int16_t y1 = corner[1].get_y();
+    uint32_t color;
+
+    int16_t slope = abs(y1 - y0) > abs(x1 - x0);
+    if (slope) {
+        swap(x0, y0);
+        swap(x1, y1);
+    }
+    if (x0 > x1) {
+        swap(x0, x1);
+        swap(y0, y1);
+    }
+    int16_t dx, dy;
+    dx = x1 - x0;
+    dy = abs(y1 - y0);
+    int16_t err = dx / 2;
+    int16_t ystep;
+    if (y0 < y1) {
+        ystep = 1;
+    }
+    else {
+        ystep = -1;
+    }
+    for (; x0 <= x1; x0++) {
+        if (slope) {
+            p2t tmp(y0,x0);
+            border_r.push_back(tmp);
+            color = color_calc(corner[0],tmp,corner[1],cnr_clr[0],cnr_clr[1]);
+            drawPixel(y0, x0, color);
+        }
+        else {
+            p2t tmp(x0,y0);
+            border_r.push_back(tmp);
+            color = color_calc(corner[0],tmp,corner[1],cnr_clr[0],cnr_clr[1]);
+            drawPixel(x0, y0, color);
+        }
+        lcddelay(1);
+        err -= dy;
+        if (err < 0) {
+            y0 += ystep;
+            err += dx;
+        }
+    }
+}
+
+void dfpolygon::ddar2()
+{   
+    int16_t x0 = corner[1].get_x();
+    int16_t y0 = corner[1].get_y();
+    int16_t x1 = corner[2].get_x();
+    int16_t y1 = corner[2].get_y();
+    uint32_t color;
+
+    int16_t slope = abs(y1 - y0) > abs(x1 - x0);
+    if (slope) {
+        swap(x0, y0);
+        swap(x1, y1);
+    }
+    if (x0 > x1) {
+        swap(x0, x1);
+        swap(y0, y1);
+    }
+    int16_t dx, dy;
+    dx = x1 - x0;
+    dy = abs(y1 - y0);
+    int16_t err = dx / 2;
+    int16_t ystep;
+    if (y0 < y1) {
+        ystep = 1;
+    }
+    else {
+        ystep = -1;
+    }
+    for (; x0 <= x1; x0++) {
+        if (slope) {
+            p2t tmp(y0,x0);
+            border_r.push_back(tmp);
+            color = color_calc(corner[1],tmp,corner[2],cnr_clr[1],cnr_clr[2]);
+            drawPixel(y0, x0, color);
+        }
+        else {
+            p2t tmp(x0,y0);
+            border_r.push_back(tmp);
+            color = color_calc(corner[1],tmp,corner[2],cnr_clr[1],cnr_clr[2]);
+            drawPixel(x0, y0, color);
+        }
+        lcddelay(1);
+        err -= dy;
+        if (err < 0) {
+            y0 += ystep;
+            err += dx;
+        }
+    }
+}
+
+void dfpolygon::plot()
+{
+    //cout << "The color is" << hex << cnr_clr[0] <<cnr_clr[1] <<cnr_clr[2]<<cnr_clr[3]<<endl;
+    ddal1();
+    ddal2();
+    ddar1();
+    ddar2();
+    return;
+}
+
+void dfpolygon::fill()
+{
+    for (int i = 0; i < border_l.size();i++)
+    {
+        for (int j = 0; j < border_r.size();j++)
+        {
+            if (border_r[j].get_y() == border_l[i].get_y())
+            {
+                uint32_t clr1, clr2;
+                //cout << "The color is" << hex << cnr_clr[0] <<cnr_clr[1] <<cnr_clr[2]<<cnr_clr[3]<<endl;
+                if (border_l[i].get_y() <= corner[3].get_y())
+                {
+                    clr1 = color_calc(corner[0],border_l[i],corner[3],cnr_clr[0],cnr_clr[3]);
+                }
+                else
+                {
+                    clr1 = color_calc(corner[3],border_l[i],corner[2],cnr_clr[3],cnr_clr[2]);
+                }
+
+                
+
+
+                if (border_l[i].get_y() <= corner[1].get_y())
+                {
+                    clr2 = color_calc(corner[0],border_r[j],corner[1],cnr_clr[0],cnr_clr[1]);
+                    //dda(border_l[i],border_r[j],clr2,clr1);
+                }
+                else
+                {
+                    clr2 = color_calc(corner[1],border_r[j],corner[2],cnr_clr[1],cnr_clr[2]);
+                    //dda(border_l[i],border_r[j],clr1,clr2);
+                }
+
+                
+                if (j == 4 || j==5){
+                    //cout << "The calculated color is "<<hex<<clr1<<","<<hex<<clr2<<endl;
+                }
+                dda(border_l[i],border_r[j],clr1,clr2);
+            }
+        }
+    }
+    return;
+}
+
+void diffShadow()
+{
+    vector<p3t> bot3 = {
+        p3t(0,0,0),
+        p3t(100,0,0),
+        p3t(100,100,0),
+        p3t(0,100,0)
+    };
+    vector<p3t> top3;
+
+    vector<p2t> bot;
+    vector<p2t> top;
+    vector<p2t> proj;
+
+    for (int i=0; i<4; i++){
+        bot.push_back(world2viewer(bot3[i].shift(0,0,10)));
+        top.push_back(world2viewer(bot3[i].shift(0,0,110)));
+        top3.push_back(bot3[i].shift(0,0,110));
+    }
+
+    p3t light(-50,50,300);
+    p3t norm(0,0,10);
+    p3t ori(0,0,0);
+
+    for (int i = 0; i < top3.size(); i++){
+        float lambda = getLambda(light, top3[i], ori, norm);
+        //cout << "The lambda value of "<<i+1<<"th corner is "<< lambda <<endl;
+        float x = top3[i].get_x() + lambda * (light.get_x() - top3[i].get_x());
+        float y = top3[i].get_y() + lambda * (light.get_y() - top3[i].get_y());
+        float z = top3[i].get_z() + lambda * (light.get_z() - top3[i].get_z());
+        //cout << "The location is ("<<x<<","<<y<<","<<z<<")\n";
+        proj.push_back(world2viewer(x,y,z));
+    }
+
+    vector<uint32_t> colors{WHITE,WHITE,WHITE,WHITE};
+    dfpolygon shadow(proj,colors);
+    shadow.plot();
+    shadow.fill();
+
+}
+
+void drawDiff(){
+    vector<p3t> bot3 = {
+        p3t(0,0,0),
+        p3t(0,100,0),
+        p3t(100,100,0),
+        p3t(100,0,0)
+    };
+    vector<p2t> bot;
+    vector<p2t> top;
+    vector<p2t> left;
+    vector<p2t> right;
+    for (int i=0; i<4; i++){
+        bot.push_back(world2viewer(bot3[i].shift(0,0,10)));
+        top.push_back(world2viewer(bot3[i].shift(0,0,110)));
+    }
+
+    vector<uint32_t> colorsl{RED,RED,RED,RED};
+    left.push_back(world2viewer(bot3[3].shift(0,0,110)));
+    left.push_back(world2viewer(bot3[2].shift(0,0,110)));
+    left.push_back(world2viewer(bot3[2]));
+    left.push_back(world2viewer(bot3[3]));
+
+    vector<uint32_t> colorsr{GREEN,GREEN,GREEN,GREEN};
+    right.push_back(world2viewer(bot3[1].shift(0,0,110)));
+    right.push_back(world2viewer(bot3[1]));
+    right.push_back(world2viewer(bot3[2]));
+    right.push_back(world2viewer(bot3[2].shift(0,0,110)));
+
+    p3t light(-50,50,250);
+    float k[3] = {0.8,0,0};
+    uint32_t cncl0 =  diffuse(light,bot3[0].shift(0,0,110),k);
+    uint32_t cncl1 =  diffuse(light,bot3[1].shift(0,0,110),k);
+    uint32_t cncl2 =  diffuse(light,bot3[2].shift(0,0,110),k);
+    uint32_t cncl3 =  diffuse(light,bot3[3].shift(0,0,110),k);
+
+
+    uint32_t rgb[3];
+    toRGB(cncl2,rgb);
+    rgb[0] *= 0.1;
+    cncl2 = fromRGB(rgb);
+
+    toRGB(cncl3,rgb);
+    rgb[0] *= 0.1;
+    cncl3 = fromRGB(rgb);
+
+    vector<uint32_t> colors{cncl0,cncl1,cncl2,cncl3};
+    vector<uint32_t> colors1{YELLOW,YELLOW,YELLOW,YELLOW};
+    dfpolygon bottom(bot,colors1);
+    dfpolygon upper(top,colors);
+
+    dfpolygon leftp(left,colorsl);
+    dfpolygon rightp(right, colorsr);
+
+    diffShadow();
+
+    leftp.plot();
+    leftp.fill();
+    rightp.plot();
+    rightp.fill();
+
+    //bottom.plot();
+    //bottom.fill();
+    /*
+    for (int i=0; i<4; i++){
+        //drawLine(bot[i],bot[(i+1)%4],YELLOW);
+        drawLine(bot[i],top[i],YELLOW);
+        //drawLine(top[i],top[(i+1)%4],YELLOW );
+    }
+    */
+    upper.plot();
+    upper.fill();
+    
+}
 
 /*
 ===============================================================================
@@ -1129,16 +1314,11 @@ int main (void)
 		puts("Port number is not correct");
 	lcd_init();
 	fillrect(0, 0, ST7735_TFTWIDTH, ST7735_TFTHEIGHT, BLACK);
-    //rotateSquare();
-    //testBranch();
-    //testTree();
-    cout << "Start to draw Forest!"<<endl;
-    drawForest(30,5);
-    cout << "start to drwa 3D Shadow!"<<endl;
+
     draw3Dcoord();
-    drawCube();
-    drawShadow();
-    //testFill();
+    drawDiff();
+    //drawCube();
+    //drawShadow();
 	return 0;
 }
 
